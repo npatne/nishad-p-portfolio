@@ -1,0 +1,357 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 270 50% 40%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 270 30% 90%;
+    --secondary-foreground: 270 50% 40%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 270 50% 40%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+
+    --radius: 0.5rem;
+
+    --off-white: 0 0% 98%;
+
+    /* Project colors */
+    --purple: 270 50% 40%;
+    --blue: 210 100% 50%;
+    --green: 142 76% 36%;
+    --orange: 27 96% 61%;
+
+    /* Heading colors */
+    --heading-color: 240 10% 3.9%;
+    --subheading-color: 240 5% 25%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 270 50% 60%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 270 30% 20%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 270 50% 60%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --off-white: 240 10% 3.9%;
+
+    /* Project colors */
+    --purple: 270 50% 60%;
+    --blue: 210 100% 60%;
+    --green: 142 76% 46%;
+    --orange: 27 96% 71%;
+
+    /* Heading colors */
+    --heading-color: 0 0% 98%;
+    --subheading-color: 0 0% 85%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    transition: border-color 0.3s ease;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Apply transitions to all elements that might change with theme */
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, box-shadow 0.3s
+      ease;
+  }
+
+  /* Heading styles with theme-aware colors */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: hsl(var(--heading-color));
+  }
+}
+
+/* Project card styles - NEW HORIZONTAL LAYOUT */
+.project-card {
+  @apply bg-card text-card-foreground;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Project tile styles - ENHANCED */
+.project-tile {
+  @apply relative overflow-hidden rounded-lg transition-all duration-300;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.project-tile:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.project-tile:hover .project-overlay {
+  @apply opacity-100;
+}
+
+.project-overlay {
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300 flex flex-col justify-end p-8;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.2) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+/* Animation delays */
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+
+/* Custom button styles */
+.btn-primary-outline {
+  @apply border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300;
+}
+
+.btn-secondary-outline {
+  @apply border border-secondary text-secondary-foreground hover:bg-secondary hover:text-secondary-foreground transition-colors duration-300;
+}
+
+/* Section styles */
+.section {
+  @apply py-16 px-6 md:px-10;
+}
+
+/* AI Chat prompt button */
+.ai-prompt-button {
+  @apply flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer;
+}
+
+/* Prose styles for rich content */
+.prose {
+  @apply max-w-none text-foreground;
+}
+
+.prose p {
+  @apply mb-4 text-muted-foreground;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply font-bold mt-8 mb-4;
+  color: hsl(var(--heading-color));
+}
+
+.prose h1 {
+  @apply text-3xl;
+}
+
+.prose h2 {
+  @apply text-2xl;
+}
+
+.prose h3 {
+  @apply text-xl;
+}
+
+.prose h4 {
+  @apply text-lg;
+}
+
+.prose ul,
+.prose ol {
+  @apply my-4 pl-6 text-muted-foreground;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose a {
+  @apply text-primary hover:underline;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-muted pl-4 italic my-4 text-muted-foreground;
+}
+
+.prose code {
+  @apply bg-muted px-1 py-0.5 rounded text-sm;
+}
+
+.prose pre {
+  @apply bg-muted p-4 rounded-lg overflow-x-auto my-4;
+}
+
+.prose img {
+  @apply rounded-lg my-6;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Dark mode specific overrides */
+.dark .project-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.8) 40%,
+    rgba(0, 0, 0, 0.3) 80%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+
+/* Card styles with theme awareness */
+.card {
+  @apply bg-card text-card-foreground border border-border rounded-lg transition-all duration-300;
+}
+
+/* Navigation item styles */
+.nav-item {
+  @apply text-foreground hover:text-primary transition-colors duration-300;
+}
+
+/* Ensure white text on colored backgrounds in both themes */
+.bg-primary,
+.bg-purple,
+.bg-blue,
+.bg-green,
+.bg-orange {
+  @apply text-white;
+}
