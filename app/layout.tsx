@@ -29,7 +29,8 @@ export default function RootLayout({
           <PasswordProtectionProvider>
             <div className="flex min-h-screen">
               {/* Sidebar - 2 columns */}
-              <Sidebar projects={projects} />
+              {/* <Sidebar projects={projects} /> */}
+              <Sidebar />
 
               {/* Main content - 6 columns */}
               <main className="flex-1 w-full md:w-6/12 min-h-screen overflow-auto pb-16 md:pb-0">{children}</main>

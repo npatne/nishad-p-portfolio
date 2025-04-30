@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
-import { MessageSquare, X, Minimize, Send, Globe, FileText, ChevronRight } from "lucide-react"
+import { MessageSquare, Sparkles, X, Minimize, Send, Globe, FileText, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
@@ -317,7 +317,8 @@ export default function Chatbot() {
       {/* Chatbot toggle button (mobile) */}
       <div className="fixed bottom-4 right-4 z-50 md:hidden">
         <Button onClick={toggleChatbot} size="icon" className="rounded-full h-12 w-12 shadow-lg">
-          {state.isOpen ? <X className="h-6 w-6" /> : <MessageSquare className="h-6 w-6" />}
+          {state.isOpen ? <X className="h-6 w-6" /> : <Sparkles className="h-6 w-6" />}
+          
         </Button>
       </div>
 
@@ -327,29 +328,25 @@ export default function Chatbot() {
           "fixed inset-y-0 right-0 z-40 bg-background border-l border-border transition-all duration-300 ease-in-out flex flex-col",
           !state.isOpen && "translate-x-full",
           state.isMinimized && "h-auto inset-y-auto bottom-0",
-          state.isCollapsed ? "w-16" : "w-full sm:w-96",
+          state.isCollapsed ? "w-20" : "w-full sm:w-96",
           "md:relative md:translate-x-0",
-          state.isCollapsed ? "md:w-16" : "md:w-4/12",
+          state.isCollapsed ? "md:w-20" : "md:w-4/16",
         )}
-        style={{ height: "100vh" }}
+        style={{ height: "100vh", position: "sticky" }}
       >
         {/* Chatbot header */}
         <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center space-x-2 text-foreground">
-            <MessageSquare className="h-5 w-5" />
+            <Sparkles className="h-4 w-4" />
             {!state.isCollapsed && <h2 className="font-medium">AI Assistant</h2>}
           </div>
-          <div className="flex items-center space-x-1">
-            {!state.isCollapsed && (
-              <Button variant="ghost" size="icon" onClick={toggleMinimize} className="h-8 w-8 text-foreground">
-                {state.isMinimized ? <Minimize className="h-4 w-4 rotate-180" /> : <Minimize className="h-4 w-4" />}
-              </Button>
-            )}
+          <div className="flex items-center space-x-1 gap-2">
+            
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleCollapse}
-              className="h-8 w-8 hidden md:flex text-foreground"
+              className="h-6 w-6 hidden md:flex text-foreground"
               aria-label={state.isCollapsed ? "Expand chatbot" : "Collapse chatbot"}
             >
               <ChevronRight className={cn("h-4 w-4 transition-transform", state.isCollapsed && "rotate-180")} />
@@ -482,7 +479,7 @@ export default function Chatbot() {
               className="h-10 w-10 rounded-full text-foreground"
               aria-label="Expand chatbot"
             >
-              <MessageSquare className="h-5 w-5" />
+              <Sparkles className="h-5 w-5" />
             </Button>
           </div>
         )}

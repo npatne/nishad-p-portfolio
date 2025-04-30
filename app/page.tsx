@@ -2,53 +2,15 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getAllBlogPosts } from "@/lib/content-manager"
+import { projects } from "@/data/projects" // Import centralized projects
+import ProjectCard from "@/components/ProjectCard" // Import the new component
 
-// Define featured projects
-const featuredProjects = [
-  {
-    id: "project1",
-    slug: "lei-app-1",
-    title: "LEI Application 1",
-    subtitle: "Educational Platform for K-12 Teachers",
-    description:
-      "A comprehensive platform designed to help K-12 teachers create, manage, and deliver interactive lessons to their students.",
-    color: "purple",
-    image: "/placeholder.svg?height=600&width=800",
-  },
-  {
-    id: "project2",
-    slug: "lei-app-2",
-    title: "LEI Application 2",
-    subtitle: "Student Assessment & Progress Tracking System",
-    description:
-      "An innovative system for tracking student progress and providing personalized learning recommendations based on assessment data.",
-    color: "blue",
-    image: "/placeholder.svg?height=600&width=800",
-  },
-  {
-    id: "project3",
-    slug: "lei-app-3",
-    title: "LEI Application 3",
-    subtitle: "Educational Content Management System",
-    description:
-      "A scalable content management system for creating, organizing, and distributing educational materials across multiple platforms.",
-    color: "green",
-    image: "/placeholder.svg?height=600&width=800",
-  },
-  {
-    id: "project4",
-    slug: "desktop-app",
-    title: "Desktop Application",
-    subtitle: "Cross-platform Educational Tool",
-    description:
-      "A desktop application for creating interactive educational content that works seamlessly across Windows, macOS, and Linux.",
-    color: "orange",
-    image: "/placeholder.svg?height=600&width=800",
-  },
-]
+// Remove local featuredProjects definition
+// const featuredProjects = [ ... ]
 
 export default function Home() {
   const recentBlogPosts = getAllBlogPosts().slice(0, 3)
+  const featuredProjectsData = projects.filter(p => p.featured) // Filter from centralized data
 
   return (
     <div className="min-h-screen">
@@ -60,17 +22,17 @@ export default function Home() {
             Creating intuitive, scalable, and elegant user experiences through research-driven design and engineering
             excellence.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 animate-fadeIn animation-delay-200">
-            <Button
+          <div className="flex flex-col sm:flex-row gap-5 animate-fadeIn animation-delay-200">
+            {/* <Button
               asChild
               size="lg"
-              className="text-lg py-7 px-8 border-2 border-primary bg-transparent text-primary hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors duration-300 shadow-lg"
+              className="text-md border-2 border-primary bg-transparent text-primary hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors duration-300 shadow-md"
             >
               <Link href="/projects" className="flex items-center">
                 View Projects
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
-            </Button>
+            </Button> */}
             <Button
               asChild
               variant="outline"
@@ -90,35 +52,9 @@ export default function Home() {
 
           {/* One project per line */}
           <div className="space-y-16">
-            {featuredProjects.map((project) => (
-              <div
-                key={project.id}
-                className="project-card flex flex-col lg:flex-row gap-8 rounded-xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div className="lg:w-1/2 h-80 lg:h-auto overflow-hidden">
-                  <img
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="lg:w-1/2 p-8 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-3xl font-bold mb-3">{project.title}</h3>
-                    <p className="text-xl mb-4">{project.subtitle}</p>
-                    <p className="text-muted-foreground mb-6">{project.description}</p>
-                  </div>
-                  <Button
-                    asChild
-                    className="self-start border-2 border-primary bg-transparent text-primary hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors duration-300"
-                  >
-                    <Link href={`/projects/${project.slug}`} className="flex items-center">
-                      View Case Study
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
+            {/* Use ProjectCard component */}
+            {featuredProjectsData.map((project) => (
+              <ProjectCard key={project.id} project={project} layout="horizontal" />
             ))}
           </div>
 
@@ -127,7 +63,7 @@ export default function Home() {
             <Button
               asChild
               size="lg"
-              className="text-lg py-7 px-8 border-2 border-primary bg-transparent text-primary hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors duration-300 shadow-lg"
+              className="text-md border-2 border-primary bg-transparent text-primary hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors duration-300 shadow-lg"
             >
               <Link href="/projects" className="flex items-center">
                 View All Projects
@@ -156,7 +92,7 @@ export default function Home() {
                   </div>
                   <p className="text-muted-foreground mb-4">{post.excerpt}</p>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">{post.readTime}</span>
+                    <div className="text-sm text-muted-foreground">{post.readTime}</div>
                     <Link
                       href={`/blog/${post.slug}`}
                       className="inline-flex items-center text-primary hover:underline font-medium"

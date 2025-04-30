@@ -19,6 +19,7 @@ export interface ProjectContent {
   featured?: boolean
   tags?: string[]
   sections: ProjectSection[]
+  image?: string // Add image property
   images?: string[]
   videos?: string[]
 }

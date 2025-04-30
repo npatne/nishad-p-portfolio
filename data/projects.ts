@@ -12,7 +12,8 @@ export const projects: ProjectContent[] = [
     duration: "8 months",
     team: "Cross-functional team of 12 (designers, developers, educators)",
     color: "purple",
-    featured: true,
+    featured: true, // Keep featured
+    image: "/placeholder.svg?height=600&width=800", // Add image
     tags: ["UX Research", "Design Systems", "Prototyping"],
     sections: [
       {
@@ -65,7 +66,8 @@ export const projects: ProjectContent[] = [
     duration: "6 months",
     team: "Team of 8 (designers, developers, data scientists)",
     color: "blue",
-    featured: true,
+    featured: true, // Keep featured
+    image: "/placeholder.svg?height=600&width=800", // Add image
     tags: ["UI Design", "User Testing", "Accessibility"],
     sections: [
       {
@@ -118,7 +120,8 @@ export const projects: ProjectContent[] = [
     duration: "10 months",
     team: "Team of 15 (designers, developers, content specialists)",
     color: "green",
-    featured: true,
+    featured: false, // Set featured to false
+    image: "/placeholder.svg?height=600&width=800", // Add image
     tags: ["Design Systems", "Component Libraries", "Documentation"],
     sections: [
       {
@@ -171,7 +174,8 @@ export const projects: ProjectContent[] = [
     duration: "12 months",
     team: "Team of 6 (designers, developers)",
     color: "orange",
-    featured: true,
+    featured: false, // Set featured to false
+    image: "/placeholder.svg?height=600&width=800", // Add image
     tags: ["Electron", "Cross-platform", "Performance Optimization"],
     sections: [
       {

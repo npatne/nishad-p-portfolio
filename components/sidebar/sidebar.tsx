@@ -65,8 +65,12 @@ export default function Sidebar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(true)
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [projectsOpen, setProjectsOpen] = useState(false)
-  const [openProjectSlugs, setOpenProjectSlugs] = useState<string[]>(projects.map((project) => project.slug))
+  // Initialize projectsOpen to true so the project list is always shown by default
+  const [projectsOpen, setProjectsOpen] = useState(true) 
+  // Initialize openProjectSlugs based on whether the initial path is the homepage
+  const [openProjectSlugs, setOpenProjectSlugs] = useState<string[]>(
+    pathname === "/" ? [] : projects.map((project) => project.slug) 
+  )
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(null)
 
@@ -101,7 +105,7 @@ export default function Sidebar() {
   // Auto-open projects submenu if on a project page
   useEffect(() => {
     // Always set projects submenu to open by default
-    setProjectsOpen(true)
+    setProjectsOpen(true);
 
     if (pathname.startsWith("/projects/")) {
       // Extract the project slug from the pathname
@@ -149,15 +153,15 @@ export default function Sidebar() {
         className={cn(
           "fixed inset-y-0 left-0 z-40 bg-background border-r border-border transition-all duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          isCollapsed ? "w-16" : "w-64",
+          isCollapsed ? "w-20" : "w-64",
           "md:relative md:translate-x-0 md:w-auto",
-          isCollapsed ? "md:w-16" : "md:w-2/12",
+          isCollapsed ? "md:w-20" : "md:w-2/16",
         )}
-        style={{ height: "100vh" }}
+        style={{ height: "100vh", position: "sticky" }}
       >
         <div className="flex flex-col h-full">
           {/* Top section - Logo/Branding */}
-          <div className="p-4 border-b border-border flex justify-between items-center">
+          <div className="p-4 border-b border-border flex justify-between items-center gap-2">
             {!isCollapsed && (
               <Link href="/" className="flex items-center space-x-2 text-foreground">
                 <span className="font-bold text-xl">Nishad</span>
@@ -172,10 +176,10 @@ export default function Sidebar() {
               variant="ghost"
               size="sm"
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="hidden md:flex text-foreground"
+              className="hidden md:flex text-foreground p-2 h-8 w-8"
               aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
-              <ChevronLeft className={cn("h-4 w-4 transition-transform", isCollapsed && "rotate-180")} />
+              <ChevronLeft className={cn("h-16 w-16 transition-transform", isCollapsed && "rotate-180")} />
             </Button>
           </div>
 
@@ -210,15 +214,17 @@ export default function Sidebar() {
 
               {/* Projects submenu */}
               {!isCollapsed && (
-                <Collapsible open={projectsOpen} onOpenChange={setProjectsOpen} className="w-full">
+                // Keep this controlled by projectsOpen state, which defaults to true
+                <Collapsible open={projectsOpen} onOpenChange={setProjectsOpen} className="w-full"> 
                   <CollapsibleTrigger asChild>
                     <button
                       className={cn(
                         "flex items-center w-full p-2 rounded-md hover:bg-secondary transition-colors mt-1 text-foreground",
-                        pathname.startsWith("/projects/") && "bg-secondary font-medium",
+                        // Highlight if the main list is open OR if on a project page (redundant if always open, but safe)
+                        (projectsOpen || pathname.startsWith("/projects/")) && "bg-secondary font-medium", 
                       )}
                     >
-                      <span className="ml-7 flex-1 text-left text-sm">Project List</span>
+                      <span className="ml-5 flex-1 text-left text-sm font-medium">Project List</span>
                       <ChevronDown
                         className={cn("h-4 w-4 transition-transform", projectsOpen && "transform rotate-180")}
                       />
@@ -254,8 +260,8 @@ export default function Sidebar() {
                           </button>
                         </div>
 
-                        {/* Project sections */}
-                        {openProjectSlugs.includes(project.slug) && (
+                        {/* Project sections - Visibility now depends on pathname via openProjectSlugs */}
+                        {openProjectSlugs.includes(project.slug) && ( 
                           <div className="pl-4 space-y-1 mt-1">
                             {project.sections.map((section) => (
                               <Link
@@ -305,7 +311,9 @@ export default function Sidebar() {
 
           {/* Bottom section - Contact links */}
           <div className="p-4 border-t border-border space-y-2">
-            <Link
+            
+           
+            {/* <Link
               href="/report"
               className={cn(
                 "flex items-center space-x-2 p-2 rounded-md hover:bg-secondary transition-colors text-foreground",
@@ -315,7 +323,7 @@ export default function Sidebar() {
             >
               <AlertCircle className="h-5 w-5" />
               {!isCollapsed && <span>Report a Problem</span>}
-            </Link>
+            </Link> */}
 
             <Link
               href="/contact"
@@ -331,7 +339,7 @@ export default function Sidebar() {
 
             {/* Theme toggle */}
             <div className={cn("flex items-center p-2 text-foreground", isCollapsed ? "justify-center" : "space-x-2")}>
-              {!isCollapsed && <span>Theme</span>}
+              {!isCollapsed && <div className="text-sm">Theme</div>}
               <ThemeToggle size={isCollapsed ? "icon" : "sm"} />
             </div>
           </div>

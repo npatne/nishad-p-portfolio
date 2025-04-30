@@ -30,7 +30,7 @@ export function ThemeToggle({ className, variant = "ghost", size = "icon" }: The
       variant={variant}
       size={size}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className={cn("rounded-full transition-colors duration-300", className)}
+      className={cn("rounded-full transition-colors duration-300 p-2", className)}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
     >
       <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all duration-300 dark:-rotate-90 dark:scale-0" />
