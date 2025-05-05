@@ -12,7 +12,7 @@ import { projects } from "@/data/projects" // Import projects for sidebar
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "UX Designer & Engineer Portfolio",
+  title: "Nishad Patne",
   description: "Portfolio showcasing UX design and engineering work",
     generator: 'v0.dev'
 }
@@ -24,6 +24,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" /> 
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" /> 
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> 
+      </head>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={true} disableTransitionOnChange={false}>
           <PasswordProtectionProvider>

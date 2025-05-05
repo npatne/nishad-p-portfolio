@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// Import Tooltip components
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 // Types for chatbot
 type Message = {
@@ -31,56 +38,78 @@ type ChatbotState = {
   activeCaseStudy?: string
 }
 
-// Starter questions based on page
-const starterQuestions: Record<string, string[]> = {
-  "/": [ // Home page
-    "Tell me about Nishad's UX design and engineering experience",
-    "Tell me about projects and type of work Nishad has on this portfolio?",
-    "What technologies does Nishad work with?",
-  ],
-  "/projects": [ // Projects listing page
-    "What types of projects has Nishad worked on?",
-    "Which project shows the strongest UX research?",
-    "Tell me about Nishad's design process",
-  ],
-  "/projects/": [ // Individual project pages
-    "Summarize the key features of this project",
-    "What was Nishad's role in this project?",
-    "What were the key deliverables from this project?",
-    "What was the impact of this project?",
-  ],
-  "/blog": [ // Blog listing page
-    "What topics does Nishad write about?",
-    "How often does Nishad publish new content?",
-    "What's the latest blog post about?",
-  ],
-  "/blog/": [ // Individual blog pages
-    "Why did Nishad choose to write about this topic?",
-    "What are the key insights from this post?",
-    "Can you summarize this post for me?",
-  ],
-  "/about": [
-    "What is Nishad's professional background?",
-    "What skills does Nishad specialize in?",
-    "Tell me about Nishad's education",
-  ],
-  "/contact": [
-    "What's the best way to contact Nishad?",
-    "Is Nishad available for freelance work?",
-    "What information should I include when reaching out?",
-  ]
-}
+// Starter questions: Restructured for mode and path
+const starterQuestions: Record<
+  string,
+  { general?: string[]; specific?: string[] } // Corrected type
+> = {
+  "/": {
+    general: [
+      "Tell me about Nishad's UX design and engineering experience",
+      "Tell me about projects and type of work Nishad has on this portfolio?",
+      "What technologies does Nishad work with?",
+    ],
+  },
+  "/projects": {
+    general: [
+      "What types of projects has Nishad worked on?",
+      "Which project shows the strongest UX research?",
+      "Tell me about Nishad's design process",
+    ],
+  },
+  "/projects/": {
+    // Base for specific project pages
+    specific: [
+      "Summarize the key features of this project",
+      "What was Nishad's role in this project?",
+      "What were the key deliverables from this project?",
+      "What was the impact of this project?",
+    ],
+  },
+  "/blog": {
+    general: [
+      "What topics does Nishad write about?",
+      "How often does Nishad publish new content?",
+      "What's the latest blog post about?",
+    ],
+  },
+  "/blog/": {
+    // Base for specific blog pages
+    specific: [
+      "Why did Nishad choose to write about this topic?",
+      "What are the key insights from this post?",
+      "Can you summarize this post for me?",
+    ],
+  },
+  "/about": {
+    general: [
+      "What is Nishad's professional background?",
+      "What skills does Nishad specialize in?",
+      "Tell me about Nishad's education",
+    ],
+  },
+  "/contact": {
+    general: [
+      "What's the best way to contact Nishad?",
+      "Is Nishad available for freelance work?",
+      "What information should I include when reaching out?",
+    ],
+  },
+};
+
 
 // api base url
 const apiBaseURL = "http://137.131.30.181:8000/";
 
 // Function to determine if path is a project or blog detail page
 const isDetailPage = (path: string): boolean => {
-  return path.startsWith("/projects/") || path.startsWith("/blog/")
+  // Ensure path is defined and is a string before calling startsWith
+  return typeof path === 'string' && (path.startsWith("/projects/") || path.startsWith("/blog/"));
 }
 
 // Function to extract active case study from pathname
 const getActiveCaseStudyFromPath = (path: string): string | undefined => {
+  if (typeof path !== 'string') return undefined; // Add type check
   if (path.startsWith("/projects/")) {
     return path.split("/").pop() || path;
   }
@@ -112,7 +141,7 @@ const requestNewSession = async (mode: ChatMode, activeCaseStudy?: string) => {
     return data.session_id;
   } catch (error) {
     console.error("Error getting session ID:", error);
-    // Return a fallback session ID or null
+    // Return null on error
     return null;
   }
 }
@@ -121,7 +150,7 @@ const requestNewSession = async (mode: ChatMode, activeCaseStudy?: string) => {
 const callChatApi = async (query: string, sessionId: string, mode: ChatMode, activeCaseStudy?: string, sectionContext?: string) => {
   // Start timing the request
   const startTime = performance.now();
-  
+
   try {
     // Replace with your actual API endpoint
     const response = await fetch(`${apiBaseURL}chat`, {
@@ -144,7 +173,7 @@ const callChatApi = async (query: string, sessionId: string, mode: ChatMode, act
 
     const data = await response.json();
     const responseTime = (performance.now() - startTime) / 1000; // Convert to seconds
-    
+
     return {
       ...data,
       responseTime: responseTime.toFixed(2)
@@ -152,7 +181,8 @@ const callChatApi = async (query: string, sessionId: string, mode: ChatMode, act
   } catch (error) {
     console.error("Error calling chat API:", error);
     const responseTime = (performance.now() - startTime) / 1000;
-    
+
+    // Return a structured error response
     return {
       answer: "Sorry, I encountered an error connecting to the backend. Please try again later.",
       sources: [],
@@ -177,7 +207,7 @@ export default function Chatbot() {
   })
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [isInitializing, setIsInitializing] = useState(false) // Keep for visual cues if needed, but not for session
+  const [isInitializing, setIsInitializing] = useState(false) // For session creation feedback
   const [promptContext, setPromptContext] = useState<string | undefined>()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
@@ -185,7 +215,6 @@ export default function Chatbot() {
 
   // Initialize chatbot state based on path, but don't create session yet
   useEffect(() => {
-    // Determine initial mode and active case study based on path
     const isDetail = isDetailPage(pathname)
     const initialMode = isDetail ? "specific" : "general"
     const activeCaseStudy = getActiveCaseStudyFromPath(pathname)
@@ -194,25 +223,20 @@ export default function Chatbot() {
       ...prev,
       mode: initialMode,
       activeCaseStudy,
-      // No session ID requested here anymore
+      sessionId: null, // Ensure session is null on initial load
+      messages: { general: [], specific: [] } // Ensure messages are cleared
     }))
 
-    // Update the prevPathRef
     prevPathRef.current = pathname
-    // No longer waiting for session, so set initializing false sooner if needed,
-    // or remove if initialization state isn't strictly tied to session anymore.
-    // setIsInitializing(false); // Example: if you want to remove the spinner quickly
   }, []) // Run only once on mount
 
   // Handle path changes: update mode, clear messages, RESET session ID
   useEffect(() => {
-    const handlePathChange = async () => {
-      const currentPathBase = pathname.split('#')[0]
-      const prevPathBase = prevPathRef.current.split('#')[0]
+    const handlePathChange = () => {
+      const currentPathBase = pathname?.split('#')[0] ?? ''; // Handle potential null pathname
+      const prevPathBase = prevPathRef.current?.split('#')[0] ?? ''; // Handle potential null prevPathRef.current
 
       if (currentPathBase !== prevPathBase) {
-        // setIsInitializing(true); // Optional: show brief loading state
-
         const isDetail = isDetailPage(pathname)
         const newMode = isDetail ? "specific" : "general"
         const activeCaseStudy = getActiveCaseStudyFromPath(pathname)
@@ -227,7 +251,6 @@ export default function Chatbot() {
         }))
 
         prevPathRef.current = pathname
-        // setIsInitializing(false); // Optional: hide loading state
       }
     }
 
@@ -249,7 +272,7 @@ export default function Chatbot() {
     }
   }, [])
 
-  // Listen for AI prompts - remove session creation logic
+  // Listen for AI prompts - handle session creation via handleSendMessage
   useEffect(() => {
     const handleAiPrompt = async (event: Event) => {
       const customEvent = event as CustomEvent
@@ -259,24 +282,22 @@ export default function Chatbot() {
       const newMode = project ? "specific" : "general"
       let activeCaseStudy = project || undefined
 
-      // If mode or case study is different, update state but don't request new session
+      // Update state if mode or case study changes, clear target mode messages
       if (newMode !== state.mode || activeCaseStudy !== state.activeCaseStudy) {
-        // setIsInitializing(true); // Optional visual cue
         setState((prev) => ({
           ...prev,
           isOpen: true,
           isCollapsed: false,
           mode: newMode,
           activeCaseStudy,
-          // No session ID change here
-          messages: { // Clear messages only for the *new* mode
+          messages: {
             ...prev.messages,
-            [newMode]: []
+            [newMode]: [] // Clear messages only for the *new* mode
           }
+          // No session ID change here
         }))
-        // setIsInitializing(false); // Optional visual cue
       } else {
-        // Just open the chatbot
+        // Just open the chatbot if mode/case study are the same
         setState((prev) => ({
           ...prev,
           isOpen: true,
@@ -312,12 +333,10 @@ export default function Chatbot() {
         prompt = `Tell me about the ${page} page.`
       }
 
-
-      // handleSendMessage will now handle session creation if needed
+      // Trigger message sending (which handles session creation if needed)
       if (prompt) {
-         // Use a small timeout to ensure state update completes before sending message
-         // This might be needed if setIsInitializing was used and needs to resolve
-         setTimeout(() => handleSendMessage(prompt), 0);
+         // Use setTimeout to ensure state updates (like mode change) are processed
+         setTimeout(() => handleStarterQuestionClick(prompt), 0);
       }
     }
 
@@ -325,8 +344,7 @@ export default function Chatbot() {
     return () => {
       window.removeEventListener("ai-prompt", handleAiPrompt)
     }
-    // Removed isInitializing from dependency array as session logic is moved
-  }, [state.mode, state.activeCaseStudy, state.sessionId]) // Add sessionId dependency
+  }, [state.mode, state.activeCaseStudy]) // Dependencies: mode and activeCaseStudy trigger re-evaluation if prompt logic depends on them
 
   // Scroll to bottom of messages
   useEffect(() => {
@@ -335,179 +353,178 @@ export default function Chatbot() {
     }
   }, [state.messages, state.mode]) // Add state.mode dependency
 
-  // Get starter questions for current page (no changes needed here)
-  const getStarterQuestions = () => {
-    // Try to find exact match first
-    if (starterQuestions[pathname]) {
-      return starterQuestions[pathname]
+  // Get starter questions for current page and mode
+  const getStarterQuestions = (): string[] => {
+    const currentMode = state.mode;
+    let questions: string[] | undefined;
+    const currentPathname = pathname || "/"; // Default to "/" if pathname is null/undefined
+
+    // 1. Try exact path match for the current mode
+    if (starterQuestions[currentPathname]?.[currentMode]) {
+      questions = starterQuestions[currentPathname]?.[currentMode];
     }
-    
-    // For project or blog detail pages
-    if (pathname.startsWith("/projects/")) {
-      return starterQuestions["/projects/"]
-    }
-    
-    if (pathname.startsWith("/blog/")) {
-      return starterQuestions["/blog/"]
-    }
-    
-    // For section pages
-    for (const path in starterQuestions) {
-      if (pathname.startsWith(path) && path !== "/") {
-        return starterQuestions[path]
+
+    // 2. Try base path match for projects/blogs for the current mode
+    if (!questions) {
+      if (currentPathname.startsWith("/projects/") && starterQuestions["/projects/"]?.[currentMode]) {
+        questions = starterQuestions["/projects/"]?.[currentMode];
+      } else if (currentPathname.startsWith("/blog/") && starterQuestions["/blog/"]?.[currentMode]) {
+        questions = starterQuestions["/blog/"]?.[currentMode];
       }
     }
-    
-    // Default to home page questions
-    return starterQuestions["/"]
-  }
 
-  // Handle sending a message - Session creation logic remains here
-  const handleSendMessage = async (content: string) => {
-    if (!content.trim() || isLoading) return // Allow sending even if initializing visually
+    // 3. Try the listing page for the current mode (e.g., /projects for /projects/lei-app-1)
+     if (!questions) {
+       const listingPath = currentPathname.split('/')[1]; // e.g., 'projects' or 'blog'
+       if (listingPath && starterQuestions[`/${listingPath}`]?.[currentMode]) {
+         questions = starterQuestions[`/${listingPath}`]?.[currentMode];
+       }
+     }
 
-    let currentSessionId = state.sessionId;
-    const currentMode = state.mode; // Capture current mode
-
-    // --- Session Creation Logic (No changes needed here) ---
-    if (!currentSessionId) {
-      setIsLoading(true); // Show loading while getting session
-      setIsInitializing(true); // Use initializing state for session creation feedback
-      try {
-        console.log("Requesting new session ID for mode:", currentMode, "case study:", state.activeCaseStudy);
-        currentSessionId = await requestNewSession(currentMode, state.activeCaseStudy);
-        if (!currentSessionId) {
-          throw new Error("Failed to obtain a session ID.");
-        }
-        // Update state immediately with the new session ID
-        setState(prev => ({ ...prev, sessionId: currentSessionId }));
-        console.log("Obtained new session ID:", currentSessionId);
-      } catch (error) {
-        console.error("Error creating session:", error);
-        // Add error message directly to the current mode's message list
-        const errorMessage: Message = {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          content: "Sorry, I couldn't start a chat session. Please try again later.",
-          timestamp: Date.now()
-        };
-        setState(prev => ({
-          ...prev,
-          messages: {
-            ...prev.messages,
-            [currentMode]: [...prev.messages[currentMode], errorMessage]
-          }
-        }));
-        setIsLoading(false);
-        setIsInitializing(false);
-        return; // Stop processing if session creation failed
-      } finally {
-         setIsInitializing(false); // Turn off initializing state after attempt
-         // Keep setIsLoading(true) as we are now proceeding to call the chat API
-      }
-    }
-    // --- End Session Creation Logic ---
-
-    // Ensure we have a session ID before proceeding
-    if (!currentSessionId) {
-        console.error("Attempted to send message without a session ID.");
-        // Optionally show an error message to the user
-        return;
+    // 4. Fallback to home page general questions if still nothing found
+    if (!questions) {
+      questions = starterQuestions["/"]?.general;
     }
 
+    // 5. Final fallback if even home general is missing
+    return questions || ["Ask me anything about Nishad's portfolio."];
+  };
 
-    // Add user message to the correct mode's array
-    const userMessageId = crypto.randomUUID()
-    const userMessage: Message = {
-      id: userMessageId,
-      role: "user",
+  // Add message to state helper
+  const addMessageToState = (
+    role: "user" | "assistant",
+    content: string,
+    responseTime?: number
+  ) => {
+    const newMessage: Message = {
+      id: crypto.randomUUID(),
+      role,
       content,
-      timestamp: Date.now()
-    }
+      timestamp: Date.now(),
+      responseTime,
+    };
 
-    // Use functional update to ensure we're working with the latest state
-    setState((prev) => ({
-      ...prev,
-      messages: {
-        ...prev.messages,
-        [currentMode]: [...prev.messages[currentMode], userMessage]
-      },
-    }))
+    setState((prev) => {
+      const currentModeMessages = prev.messages[prev.mode] || [];
+      return {
+        ...prev,
+        messages: {
+          ...prev.messages,
+          [prev.mode]: [...currentModeMessages, newMessage],
+        },
+      };
+    });
+  };
 
-    setInput("")
-    setIsLoading(true) // Ensure loading is true
+  // Internal function to handle the actual sending logic after session is confirmed
+  const handleSendMessageInternal = async (
+    content: string,
+    sessionId: string // Expects a valid session ID
+  ) => {
+    if (!content.trim() || isLoading) return; // Prevent sending empty/during loading
+
+    const currentMode = state.mode;
+    const currentCaseStudy = state.activeCaseStudy;
+    const currentSectionContext = promptContext; // Capture context before clearing
+
+    // Add user message optimistically
+    addMessageToState("user", content);
+
+    setInput(""); // Clear input field
+    setIsLoading(true); // Set loading state for API call
+    setPromptContext(undefined); // Clear section context after use
 
     try {
-      // Call the API using the obtained/existing session ID and current mode
       const response = await callChatApi(
         content,
-        currentSessionId, // Use the definite session ID
+        sessionId, // Use the confirmed session ID
         currentMode,
-        state.activeCaseStudy,
-        promptContext
-      )
+        currentCaseStudy,
+        currentSectionContext
+      );
 
-      // Add assistant message to the correct mode's array
-      const assistantMessage: Message = {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content: response.answer,
-        timestamp: Date.now(),
-        responseTime: parseFloat(response.responseTime)
-      }
-
-      setState((prev) => ({
-        ...prev,
-        messages: {
-          ...prev.messages,
-          [currentMode]: [...prev.messages[currentMode], assistantMessage]
-        },
-      }))
-
-      setPromptContext(undefined) // Clear prompt context after use
+      // Add assistant message
+      addMessageToState(
+        "assistant",
+        response.answer,
+        parseFloat(response.responseTime) // Ensure responseTime is a number
+      );
     } catch (error) {
-      console.error("Error sending message:", error)
-
-      // Add error message to the correct mode's array
-      const errorMessage: Message = {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content: "Sorry, I encountered an error. Please try again later.",
-        timestamp: Date.now()
-      }
-
-      setState((prev) => ({
-        ...prev,
-        messages: {
-          ...prev.messages,
-          [currentMode]: [...prev.messages[currentMode], errorMessage]
-        },
-      }))
+      console.error("Error sending message:", error);
+      addMessageToState(
+        "assistant",
+        "Sorry, I encountered an error processing your request. Please try again later."
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false); // Clear loading state
+      setIsInitializing(false); // Ensure initializing state is also cleared
     }
-  }
+  };
 
-  // Handle starter question click (no changes needed)
+  // Handle sending a message / starter question click (handles session creation)
   const handleStarterQuestionClick = (question: string) => {
-    // ... existing code ...
-  }
+    if (!question.trim()) return;
 
-  // Toggle chatbot open/closed (no changes needed)
+    if (!state.sessionId) {
+      setIsInitializing(true); // Show initializing state for session request
+      setIsLoading(true); // Also set loading as we'll proceed to send message
+      console.log("No session ID found, requesting new one...");
+      requestNewSession(state.mode, state.activeCaseStudy)
+        .then((newSessionId) => {
+          if (newSessionId) {
+            console.log("Obtained new session ID:", newSessionId);
+            setState((prev) => ({ ...prev, sessionId: newSessionId }));
+            // Now send the message with the new session ID
+            handleSendMessageInternal(question, newSessionId); // Pass the new ID
+          } else {
+            // Handle session creation failure
+            console.error("Failed to get session ID, cannot send message.");
+            addMessageToState(
+              "assistant",
+              "Sorry, I couldn't start a session. Please try again."
+            );
+            setIsInitializing(false); // Clear initializing state on failure
+            setIsLoading(false); // Clear loading state on failure
+          }
+        })
+        .catch((error) => {
+          console.error("Error during session request:", error);
+          addMessageToState(
+            "assistant",
+            "Sorry, an error occurred while starting a session."
+          );
+          setIsInitializing(false); // Clear initializing state on error
+          setIsLoading(false); // Clear loading state on error
+        });
+    } else {
+      // Session already exists, send message directly
+      console.log("Session ID exists:", state.sessionId, "Sending message.");
+      handleSendMessageInternal(question, state.sessionId); // Pass existing ID
+    }
+  };
+
+
+  // Toggle chatbot open/closed
   const toggleChatbot = () => {
-    // ... existing code ...
-  }
+    setState((prev) => ({
+      ...prev,
+      isOpen: !prev.isOpen,
+      isCollapsed: prev.isOpen ? prev.isCollapsed : false // Optionally un-collapse when opening
+    }));
+  };
 
-  // Toggle chatbot collapsed/expanded (no changes needed)
+  // Toggle chatbot collapsed/expanded
   const toggleCollapse = () => {
-    // ... existing code ...
-  }
+    setState((prev) => ({
+      ...prev,
+      isCollapsed: !prev.isCollapsed
+    }));
+  };
 
-  // Change chat mode - remove session creation, just switch mode
-  const handleModeChange = async (mode: ChatMode) => {
+  // Change chat mode - No session creation, just switch mode
+  const handleModeChange = (mode: ChatMode) => {
     if (mode === state.mode) return
 
-    // No need to set initializing or request new session
     // Just update the mode in the state
     setState(prev => ({
       ...prev,
@@ -516,7 +533,7 @@ export default function Chatbot() {
     }))
   }
 
-  // Determine if mode selection should be shown (no changes needed)
+  // Determine if mode selection should be shown
   const showModeSelection = isDetailPage(pathname)
 
   // Get messages for the current mode
@@ -538,12 +555,13 @@ export default function Chatbot() {
           !state.isOpen && "translate-x-full",
           state.isCollapsed ? "w-20" : "w-full sm:w-96",
           "md:relative md:translate-x-0",
-          state.isCollapsed ? "md:w-20" : "md:w-4/16",
+          state.isCollapsed ? "md:w-20" : "md:w-4/16", // Adjust width as needed
         )}
-        style={{ height: "100vh", position: "sticky" }}
+        // Use max-height and height to ensure it fits viewport
+        style={{ height: "100vh", maxHeight: "100vh", position: "sticky", top: 0 }}
       >
         {/* Chatbot header */}
-        <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between flex-shrink-0">
           <div className="flex items-center space-x-2 text-foreground">
             <Sparkles className="h-4 w-4" />
             {!state.isCollapsed && <h2 className="font-medium">AI Assistant</h2>}
@@ -565,50 +583,87 @@ export default function Chatbot() {
         </div>
 
         {/* Chatbot content */}
-        { !state.isCollapsed && (
+        {!state.isCollapsed && (
           <>
-            {/* Mode tabs - logic remains the same, but handleModeChange is updated */}
-            {showModeSelection && (
-              <div className="border-b border-border">
+            {/* Mode tabs with Tooltips */}
+            <div className="border-b border-border flex-shrink-0">
+              {/* Wrap with TooltipProvider and set delay */}
+              <TooltipProvider delayDuration={1000}>
                 <Tabs
                   value={state.mode}
                   onValueChange={(value) => handleModeChange(value as ChatMode)}
                   className="w-full"
                 >
                   <TabsList className="grid grid-cols-2">
-                    <TabsTrigger value="general" className="flex items-center gap-2 text-foreground">
-                      <Globe className="h-4 w-4" />
-                      <span>General</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="specific" className="flex items-center gap-2 text-foreground">
-                      <FileText className="h-4 w-4" />
-                      <span>Page Specific</span>
-                    </TabsTrigger>
+                    {/* General Tab */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <TabsTrigger
+                          value="general"
+                          className={cn(
+                            "flex items-center gap-2 text-foreground",
+                            state.mode === "general" ? "text-primary border-b-2 border-primary font-medium" : "opacity-70"
+                          )}
+                        >
+                          <Globe className="h-4 w-4" />
+                          <span>General</span>
+                        </TabsTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Ask general questions about Nishad and his portfolio.</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    {/* Specific Tab */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <TabsTrigger
+                          value="specific"
+                          className={cn(
+                            "flex items-center gap-2 text-foreground",
+                            state.mode === "specific" ? "text-primary border-b-2 border-primary font-medium" : "opacity-70"
+                          )}
+                          disabled={!isDetailPage(pathname)}
+                        >
+                          <FileText className="h-4 w-4" />
+                          <span>Page Specific</span>
+                        </TabsTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Ask questions specifically about the content on the current page.</p>
+                         {!isDetailPage(pathname) && <p className="text-xs text-muted-foreground">(Only available on project/blog detail pages)</p>}
+                      </TooltipContent>
+                    </Tooltip>
                   </TabsList>
                 </Tabs>
-              </div>
-            )}
+              </TooltipProvider>
+            </div>
 
             {/* Messages container */}
             <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
-              {/* Initializing indicator - Now potentially shown during first message send */}
+              {/* Initializing indicator - Shown during session request */}
               {isInitializing && (
-                <div className="text-center py-8 animate-fadeIn">
-                  <div className="flex justify-center space-x-2">
-                    <div className="h-2 w-2 rounded-full bg-primary animate-bounce" />
-                    <div className="h-2 w-2 rounded-full bg-primary animate-bounce delay-75" />
-                    <div className="h-2 w-2 rounded-full bg-primary animate-bounce delay-150" />
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2">Initializing chat session...</p>
-                </div>
+                 <div className="flex justify-center items-center h-full">
+                   <div className="text-muted-foreground text-sm flex items-center gap-2">
+                     <div className="h-4 w-4 border-2 border-muted-foreground border-t-transparent rounded-full animate-spin" />
+                     Initializing chat...
+                   </div>
+                 </div>
               )}
 
-              {/* Welcome message - Check current mode's messages */}
+              {/* Welcome message & Starter Questions - Shown only if not initializing and no messages */}
               {!isInitializing && currentMessages.length === 0 && (
                 <div className="text-center space-y-4 py-8 animate-fadeIn">
-                  {/* ... existing welcome message and starter questions ... */}
-                  {/* Ensure starter questions call handleStarterQuestionClick */}
-                   <div className="space-y-2 mt-6">
+                  <div className="inline-block bg-secondary p-3 rounded-full">
+                    <Sparkles className="h-6 w-6 text-secondary-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">Welcome!</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Ask me anything about Nishad's portfolio, projects, or experience.
+                  </p>
+
+                  {/* Starter questions */}
+                  <div className="space-y-2 mt-6">
                     <p className="text-sm font-medium text-foreground">Try asking:</p>
                     <div className="flex flex-col space-y-2">
                       {getStarterQuestions().map((question, index) => (
@@ -616,7 +671,7 @@ export default function Chatbot() {
                           key={index}
                           variant="outline"
                           className="justify-start text-left h-auto py-2 text-foreground whitespace-normal break-words"
-                          onClick={() => handleStarterQuestionClick(question)} // Corrected this line
+                          onClick={() => handleStarterQuestionClick(question)} // Use updated handler
                         >
                           {question}
                         </Button>
@@ -626,13 +681,11 @@ export default function Chatbot() {
                 </div>
               )}
 
-              {/* Chat messages - Render messages for the current mode */}
-              {currentMessages.map((message) => (
+              {/* Chat messages - Shown only if not initializing */}
+              {!isInitializing && currentMessages.map((message) => (
                 <div
                   key={message.id}
-                  className={cn("flex flex-col animate-fadeIn", 
-                    message.role === "user" ? "items-end" : "items-start"
-                  )}
+                  className={cn("flex animate-fadeIn", message.role === "user" ? "justify-end" : "justify-start")}
                 >
                   <div
                     className={cn(
@@ -642,55 +695,86 @@ export default function Chatbot() {
                         : "bg-secondary text-secondary-foreground",
                     )}
                   >
+                    {/* Render message content - consider using a markdown renderer if needed */}
                     {message.content}
+                     {/* Optionally display response time for assistant messages */}
+                     {message.role === 'assistant' && message.responseTime && (
+                       <div className="text-xs opacity-70 mt-1 text-right">
+                         {message.responseTime}s
+                       </div>
+                     )}
                   </div>
-                  
-                  {/* Response time and disclaimer for AI messages */}
-                  {message.role === "assistant" && (
-                    <div className="mt-1 space-y-1">
-                      {message.responseTime && (
-                        <p className="text-xs text-muted-foreground">
-                          Response time: {message.responseTime}s
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  <p className="text-xs text-muted-foreground italic">
-                      This is an experimental personal chatbot - may hallucinate or be slow at times! 😊
-                      </p>
                 </div>
               ))}
-              <div ref={messagesEndRef} /> {/* For scrolling */}
+
+              {/* Loading indicator for API call - Shown only if not initializing */}
+              {isLoading && !isInitializing && (
+                 <div className="flex justify-start">
+                   <div className="bg-secondary text-secondary-foreground rounded-lg p-3 inline-flex items-center space-x-2">
+                     <div className="h-2 w-2 rounded-full bg-current animate-bounce" />
+                     <div className="h-2 w-2 rounded-full bg-current animate-bounce delay-75" />
+                     <div className="h-2 w-2 rounded-full bg-current animate-bounce delay-150" />
+                   </div>
+                 </div>
+              )}
+              
+              {/* Scroll anchor */}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Input area */}
-            <div className="p-4 border-t border-border">
+            <div className="p-4 border-t border-border flex-shrink-0">
               <form
                 onSubmit={(e) => {
-                  e.preventDefault()
-                  handleSendMessage(input)
+                  e.preventDefault();
+                  handleStarterQuestionClick(input); // Use the unified handler
                 }}
                 className="flex items-center space-x-2"
               >
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask me anything..."
-                  className="flex-1"
-                  disabled={isLoading || isInitializing} // Disable input during initial session creation too
+                  placeholder={
+                    isLoading || isInitializing
+                      ? "Thinking..."
+                      : "Ask me anything..."
+                  }
+                  className="flex-1 bg-input text-foreground placeholder:text-muted-foreground"
+                  disabled={isLoading || isInitializing} // Disable input when loading or initializing
+                  aria-label="Chat input"
                 />
-                <Button type="submit" size="icon" disabled={isLoading || isInitializing || !input.trim()}>
-                  {isLoading ? (
-                    <div className="h-4 w-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
+                <Button
+                  type="submit"
+                  size="icon"
+                  disabled={!input.trim() || isLoading || isInitializing} // Disable button when no input or loading/initializing
+                  className="h-9 w-9"
+                  aria-label="Send message"
+                >
+                  <Send className="h-4 w-4" />
                 </Button>
               </form>
+              {/* Add the disclaimer text here */}
+              <p className="text-xs text-muted-foreground text-center px-4 pb-2 pt-1 mt-2">
+                This is an experimental personal chatbot - may hallucinate or be slow at times! 😊
+              </p>
             </div>
           </>
         )}
+
+        {/* Collapsed view */}
+        {state.isCollapsed && (
+          <div className="p-2 flex justify-center items-center h-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleCollapse}
+              className="text-foreground hover:bg-muted"
+            >
+              <Sparkles className="h-5 w-5" />
+            </Button>
+          </div>
+        )}
       </div>
     </>
-  )
+  );
 }

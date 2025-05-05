@@ -1,96 +1,112 @@
-import { Mail, Phone, MapPin, Send } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from "@/components/ui/card"
+'use client'; // Needed for useState and event handlers
+
+import { Mail, MapPin, Linkedin, ClipboardCopy, Check } from "lucide-react"; // Added Linkedin, ClipboardCopy, Check
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react"; // Added useState
 
 export default function ContactPage() {
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedLinkedIn, setCopiedLinkedIn] = useState(false);
+
+  const emailAddress = "nishadpux@gmail.com"; // Replace with your actual email
+  const linkedInUrl = "https://www.linkedin.com/in/nishad-patne/"; // Replace with your actual LinkedIn URL
+  const linkedInDisplay = "Connect on LinkedIn"; // Text for the LinkedIn link
+
+  const copyToClipboard = (text: string, type: 'email' | 'linkedin') => {
+    navigator.clipboard.writeText(text).then(() => {
+      if (type === 'email') {
+        setCopiedEmail(true);
+        setTimeout(() => setCopiedEmail(false), 2000); // Reset after 2 seconds
+      } else if (type === 'linkedin') {
+        setCopiedLinkedIn(true);
+        setTimeout(() => setCopiedLinkedIn(false), 2000); // Reset after 2 seconds
+      }
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+      // Optionally, show an error message to the user
+    });
+  };
+
   return (
-    <div className="min-h-screen py-12 px-6 md:px-10 md:max-w-5xl 	lg:max-w-7xl">
+    <div className="min-h-screen py-12 px-6 md:px-10 md:max-w-5xl lg:max-w-7xl">
       <header className="mb-12">
         <h1 className="text-4xl font-bold mb-4">Contact</h1>
+        {/* Updated introductory text */}
         <p className="text-xl text-muted-foreground max-w-3xl">
-          Have a question or want to work together? Feel free to reach out using the form below or through my contact
-          information.
+          Feel free to reach out via email or connect with me on LinkedIn using the links below.
         </p>
       </header>
 
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
-          <form className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium">
-                Name
-              </label>
-              <Input id="name" placeholder="Your name" required />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input id="email" type="email" placeholder="Your email" required />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="subject" className="text-sm font-medium">
-                Subject
-              </label>
-              <Input id="subject" placeholder="Subject" required />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-medium">
-                Message
-              </label>
-              <Textarea id="message" placeholder="Your message" rows={5} required />
-            </div>
-            <Button type="submit" className="w-full">
-              <Send className="mr-2 h-4 w-4" />
-              Send Message
-            </Button>
-          </form>
-        </div>
-
+      {/* Removed the entire form grid item */}
+      {/* The grid now only has one column effectively, but we keep the structure for potential future additions */}
+      <div className="grid md:grid-cols-1 gap-8 max-w-md mx-auto"> {/* Centered the remaining column */}
         <div>
           <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
           <div className="space-y-6">
+            {/* Email Card with Copy Button */}
             <Card>
-              <CardContent className="p-6 flex items-start gap-4">
-                <div className="p-2 bg-primary/10 rounded-full">
-                  <Mail className="h-6 w-6 text-primary" />
+              <CardContent className="p-6 flex items-center justify-between gap-4"> {/* Use justify-between */}
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-primary/10 rounded-full">
+                    <Mail className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Email</h3>
+                    <a href={`mailto:${emailAddress}`} className="text-muted-foreground hover:text-primary transition-colors">
+                      {emailAddress}
+                    </a>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold">Email</h3>
-                  <p className="text-muted-foreground">nishad@example.com</p>
-                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => copyToClipboard(emailAddress, 'email')}
+                  aria-label="Copy email address"
+                >
+                  {copiedEmail ? <Check className="h-4 w-4 text-green-600" /> : <ClipboardCopy className="h-4 w-4" />}
+                </Button>
               </CardContent>
             </Card>
 
+            {/* LinkedIn Card with Copy Button */}
             <Card>
-              <CardContent className="p-6 flex items-start gap-4">
-                <div className="p-2 bg-primary/10 rounded-full">
-                  <Phone className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-bold">Phone</h3>
-                  <p className="text-muted-foreground">+1 (123) 456-7890</p>
-                </div>
-              </CardContent>
-            </Card>
+               <CardContent className="p-6 flex items-center justify-between gap-4"> {/* Use justify-between */}
+                 <div className="flex items-center gap-4">
+                   <div className="p-2 bg-primary/10 rounded-full">
+                     <Linkedin className="h-6 w-6 text-primary" />
+                   </div>
+                   <div>
+                     <h3 className="font-bold">LinkedIn</h3>
+                     <a
+                       href={linkedInUrl}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="text-muted-foreground hover:text-primary transition-colors"
+                     >
+                       {linkedInDisplay}
+                     </a>
+                   </div>
+                 </div>
+                 <Button
+                   variant="ghost"
+                   size="icon"
+                   onClick={() => copyToClipboard(linkedInUrl, 'linkedin')}
+                   aria-label="Copy LinkedIn URL"
+                 >
+                   {copiedLinkedIn ? <Check className="h-4 w-4 text-green-600" /> : <ClipboardCopy className="h-4 w-4" />}
+                 </Button>
+               </CardContent>
+             </Card>
 
-            <Card>
-              <CardContent className="p-6 flex items-start gap-4">
-                <div className="p-2 bg-primary/10 rounded-full">
-                  <MapPin className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-bold">Location</h3>
-                  <p className="text-muted-foreground">Tempe, Arizona</p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Removed Phone Card */}
+            {/* Removed Location Card */}
+
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
