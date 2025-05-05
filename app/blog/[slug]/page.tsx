@@ -17,7 +17,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       <div className="relative h-64 md:h-96">
         <img src={post.image || "/placeholder.svg"} alt={post.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/50" />
-        <div className="absolute inset-0 flex items-end p-6 md:p-10">
+        <div className="absolute inset-0 flex items-end p-6 md:p-10 md:max-w-5xl 	lg:max-w-7xl">
           <div>
             <Link href="/blog" className="inline-flex items-center text-white/80 hover:text-white mb-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -39,7 +39,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       </div>
 
       {/* Post content */}
-      <div className="px-6 md:px-10 py-12 max-w-3xl mx-auto">
+      <div className="px-6 md:px-10 py-12 md:max-w-5xl 	lg:max-w-7xl mx-auto">
         {post.content.map((block, index) => {
           switch (block.type) {
             case "paragraph":

@@ -8,58 +8,10 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { projects } from "@/data/projects" // Import projects from central data
 
-// Define project structure for sidebar
-const projects = [
-  {
-    id: "project1",
-    slug: "lei-app-1",
-    title: "LEI Application 1",
-    sections: [
-      { id: "project-overview", title: "Project Overview" },
-      { id: "research-discovery", title: "Research & Discovery" },
-      { id: "design-process", title: "Design Process" },
-      { id: "implementation", title: "Implementation" },
-      { id: "results-impact", title: "Results & Impact" },
-    ],
-  },
-  {
-    id: "project2",
-    slug: "lei-app-2",
-    title: "LEI Application 2",
-    sections: [
-      { id: "project-overview", title: "Project Overview" },
-      { id: "research-discovery", title: "Research & Discovery" },
-      { id: "design-process", title: "Design Process" },
-      { id: "implementation", title: "Implementation" },
-      { id: "results-impact", title: "Results & Impact" },
-    ],
-  },
-  {
-    id: "project3",
-    slug: "lei-app-3",
-    title: "LEI Application 3",
-    sections: [
-      { id: "project-overview", title: "Project Overview" },
-      { id: "research-discovery", title: "Research & Discovery" },
-      { id: "design-process", title: "Design Process" },
-      { id: "implementation", title: "Implementation" },
-      { id: "results-impact", title: "Results & Impact" },
-    ],
-  },
-  {
-    id: "project4",
-    slug: "desktop-app",
-    title: "Desktop Application",
-    sections: [
-      { id: "project-overview", title: "Project Overview" },
-      { id: "research-discovery", title: "Research & Discovery" },
-      { id: "design-process", title: "Design Process" },
-      { id: "implementation", title: "Implementation" },
-      { id: "results-impact", title: "Results & Impact" },
-    ],
-  },
-]
+// Remove the hardcoded projects array
+// const projects = [ ... ];
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -69,7 +21,8 @@ export default function Sidebar() {
   const [projectsOpen, setProjectsOpen] = useState(true) 
   // Initialize openProjectSlugs based on whether the initial path is the homepage
   const [openProjectSlugs, setOpenProjectSlugs] = useState<string[]>(
-    pathname === "/" ? [] : projects.map((project) => project.slug) 
+    // Use the imported projects data here
+    pathname === "/" ? [] : projects.map((project) => project.slug)
   )
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(null)
@@ -112,10 +65,15 @@ export default function Sidebar() {
       const projectSlug = pathname.split("/")[2]
 
       if (projectSlug) {
-        setOpenProjectSlugs((prev) => (prev.includes(projectSlug) ? prev : [...prev, projectSlug]))
-        setActiveProjectSlug(projectSlug)
+        // Check if the project exists in the imported data
+        const projectExists = projects.some(p => p.slug === projectSlug);
+        if (projectExists) {
+          setOpenProjectSlugs((prev) => (prev.includes(projectSlug) ? prev : [...prev, projectSlug]))
+          setActiveProjectSlug(projectSlug)
+        }
       }
     }
+  // Add projects to dependency array if its content could change, though likely static
   }, [pathname])
 
   // Toggle project sections visibility
@@ -231,6 +189,7 @@ export default function Sidebar() {
                     </button>
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pl-8 space-y-1 mt-1">
+                    {/* Map over the imported projects data */}
                     {projects.map((project) => (
                       <div key={project.id}>
                         {/* Project link */}
@@ -261,8 +220,9 @@ export default function Sidebar() {
                         </div>
 
                         {/* Project sections - Visibility now depends on pathname via openProjectSlugs */}
-                        {openProjectSlugs.includes(project.slug) && ( 
+                        {openProjectSlugs.includes(project.slug) && (
                           <div className="pl-4 space-y-1 mt-1">
+                            {/* Use project.sections from the imported data */}
                             {project.sections.map((section) => (
                               <Link
                                 key={section.id}

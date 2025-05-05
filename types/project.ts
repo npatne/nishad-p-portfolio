@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 export interface ProjectSection {
   id: string
   title: string
-  content: ReactNode | string
+  content?: ReactNode | string // Make content optional
 }
 
 export interface ProjectContent {
@@ -19,7 +19,6 @@ export interface ProjectContent {
   featured?: boolean
   tags?: string[]
   sections: ProjectSection[]
-  image?: string // Add image property
-  images?: string[]
-  videos?: string[]
+  image?: string // Keep the main image property
+  // Remove images and videos arrays
 }

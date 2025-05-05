@@ -15,24 +15,15 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero section */}
-      <section className="py-16 px-6 md:px-10 animate-fadeIn">
-        <div className="max-w-3xl">
+      <section className="py-16 px-16 md:px-10 animate-fadeIn">
+        <div className="md:max-w-5xl 	lg:max-w-7xl">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">UX Designer & Engineer</h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-fadeIn animation-delay-100">
             Creating intuitive, scalable, and elegant user experiences through research-driven design and engineering
             excellence.
           </p>
           <div className="flex flex-col sm:flex-row gap-5 animate-fadeIn animation-delay-200">
-            {/* <Button
-              asChild
-              size="lg"
-              className="text-md border-2 border-primary bg-transparent text-primary hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors duration-300 shadow-md"
-            >
-              <Link href="/projects" className="flex items-center">
-                View Projects
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button> */}
+
             <Button
               asChild
               variant="outline"
@@ -47,7 +38,7 @@ export default function Home() {
 
       {/* Featured projects - ONE PER LINE, MUCH LARGER */}
       <section className="px-6 md:px-10 py-20 animate-slideUp animation-delay-300">
-        <div className="max-w-6xl mx-auto">
+        <div className="md:max-w-5xl 	lg:max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold mb-12">Featured Projects</h2>
 
           {/* One project per line */}
@@ -76,7 +67,7 @@ export default function Home() {
 
       {/* Featured blog posts - LARGER WITHOUT IMAGES */}
       <section className="px-6 md:px-10 py-16 bg-secondary/30 animate-slideUp animation-delay-400">
-        <div className="max-w-6xl mx-auto">
+        <div className="md:max-w-5xl 	lg:max-w-7xl mx-auto">
           <h2 className="text-2xl font-bold mb-8">Featured Blog Posts</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {recentBlogPosts.map((post) => (
@@ -121,7 +112,7 @@ export default function Home() {
 
       {/* Say Hi section */}
       <section className="px-6 md:px-10 py-16 animate-slideUp animation-delay-500">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="md:max-w-5xl 	lg:max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">Let's Connect</h2>
           <p className="text-lg text-muted-foreground mb-8">
             Have a project in mind or just want to chat about UX design and engineering? I'd love to hear from you!

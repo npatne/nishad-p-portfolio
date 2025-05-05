@@ -6,7 +6,7 @@ export default function BlogPage() {
   const blogPosts = getAllBlogPosts()
 
   return (
-    <div className="min-h-screen py-12 px-6 md:px-10">
+    <div className="min-h-screen py-12 px-6 md:px-10 md:max-w-5xl 	lg:max-w-7xl">
       <header className="mb-12">
         <h1 className="text-4xl font-bold mb-4">Blog</h1>
         <p className="text-xl text-muted-foreground max-w-3xl">

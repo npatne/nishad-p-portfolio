@@ -8,7 +8,7 @@ import ProjectCard from "@/components/ProjectCard" // Import the new component
 
 export default function ProjectsPage() {
   return (
-    <div className="min-h-screen py-12 px-6 md:px-10">
+    <div className="min-h-screen py-12 px-6 md:px-10 md:max-w-5xl 	lg:max-w-7xl">
       <header className="mb-12">
         <h1 className="text-4xl font-bold mb-4">Projects</h1>
         <p className="text-xl text-muted-foreground max-w-3xl">
@@ -20,7 +20,7 @@ export default function ProjectsPage() {
       <div className="space-y-12">
         {/* Use ProjectCard component */}
         {projects.map((project) => (
-           <ProjectCard key={project.id} project={project} layout="vertical" />
+           <ProjectCard key={project.id} project={project} layout="horizontal" />
         ))}
       </div>
     </div>

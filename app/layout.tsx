@@ -33,7 +33,7 @@ export default function RootLayout({
               <Sidebar />
 
               {/* Main content - 6 columns */}
-              <main className="flex-1 w-full md:w-6/12 min-h-screen overflow-auto pb-16 md:pb-0">{children}</main>
+              <main className="flex-1 w-full md:w-6/12 min-h-screen overflow-auto pb-16 md:pb-0 flex justify-center">{children}</main>
 
               {/* Chatbot - 4 columns */}
               <Chatbot />
