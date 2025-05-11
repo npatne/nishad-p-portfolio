@@ -99,7 +99,8 @@ const starterQuestions: Record<
 
 
 // api base url
-const apiBaseURL = "http://137.131.30.181:8000/";
+// const apiBaseURL = "http://137.131.30.181:8000/";
+const apiBaseURL = "/api/";
 
 // Function to determine if path is a project or blog detail page
 const isDetailPage = (path: string): boolean => {
