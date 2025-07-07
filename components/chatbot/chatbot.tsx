@@ -91,7 +91,6 @@ const starterQuestions: Record<
   "/contact": {
     general: [
       "What's the best way to contact Nishad?",
-      "Is Nishad available for freelance work?",
       "What information should I include when reaching out?",
     ],
   },
@@ -104,8 +103,9 @@ const apiBaseURL = "/api/";
 
 // Function to determine if path is a project or blog detail page
 const isDetailPage = (path: string): boolean => {
-  // Ensure path is defined and is a string before calling startsWith
-  return typeof path === 'string' && (path.startsWith("/projects/") || path.startsWith("/blog/"));
+  // Ensure path is defined and is a string before calling startsWith for now only project.
+  // return typeof path === 'string' && (path.startsWith("/projects/") || path.startsWith("/blog/"));
+  return typeof path === 'string' && (path.startsWith("/projects/"));
 }
 
 // Function to extract active case study from pathname
@@ -114,7 +114,7 @@ const getActiveCaseStudyFromPath = (path: string): string | undefined => {
   if (path.startsWith("/projects/")) {
     return path.split("/").pop() || path;
   }
-  if (path.startsWith("/blog/")) {
+  if (path.startsWith("/blog/")) { 
     return path.split("/").pop() || path;
   }
   return undefined;
@@ -618,21 +618,26 @@ export default function Chatbot() {
                     {/* Specific Tab */}
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <TabsTrigger
-                          value="specific"
-                          className={cn(
-                            "flex items-center gap-2 text-foreground",
-                            state.mode === "specific" ? "text-primary border-b-2 border-primary font-medium" : "opacity-70"
-                          )}
-                          disabled={!isDetailPage(pathname)}
-                        >
-                          <FileText className="h-4 w-4" />
-                          <span>Page Specific</span>
-                        </TabsTrigger>
+                        <div className={cn(
+                          !isDetailPage(pathname) && "cursor-not-allowed w-full"
+                        )}>
+                          <TabsTrigger
+                            value="specific"
+                            className={cn(
+                              "flex items-center gap-2 text-foreground w-full",
+                              state.mode === "specific" ? "text-primary border-b-2 border-primary font-medium" : "opacity-70",
+                              !isDetailPage(pathname) && "opacity-50"
+                            )}
+                            disabled={!isDetailPage(pathname)}
+                          >
+                            <FileText className="h-4 w-4" />
+                            <span>Project Deepdive</span>
+                          </TabsTrigger>
+                        </div>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Ask questions specifically about the content on the current page.</p>
-                         {!isDetailPage(pathname) && <p className="text-xs text-muted-foreground">(Only available on project/blog detail pages)</p>}
+                        {!isDetailPage(pathname) && <p className="text-xs text-muted-foreground">(Only available on project pages)</p>}
                       </TooltipContent>
                     </Tooltip>
                   </TabsList>
@@ -769,7 +774,7 @@ export default function Chatbot() {
               variant="ghost"
               size="icon"
               onClick={toggleCollapse}
-              className="text-foreground hover:bg-muted"
+              className="text-foreground hover:text-accent-foreground hover:bg-accent"
             >
               <Sparkles className="h-5 w-5" />
             </Button>

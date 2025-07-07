@@ -55,6 +55,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
               title="" 
               content={section.content}
               image={section.image}
+              images={section.images} // Add support for multiple images
               imageAlt={section.imageAlt || `${post.title} - Section ${index + 1}`}
               imagePosition={section.imagePosition as ImagePosition} // Cast type if needed
               projectTitle={post.title} // Pass blog post title as projectTitle

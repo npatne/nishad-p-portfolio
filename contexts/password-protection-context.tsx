@@ -21,26 +21,26 @@ type PasswordProtectionContextType = {
 // Create the context
 const PasswordProtectionContext = createContext<PasswordProtectionContextType | undefined>(undefined)
 
-// Define the protected pages and their passwords
+// Define the protected pages and their passwords uncomment and add protected pages later on and add the data later on.
 const protectedPages: ProtectedPage[] = [
-  {
-    path: "/projects/lei-app-1",
-    password: "project1pass",
-    title: "LEI Application 1",
-    description: "This project contains confidential information about our educational platform.",
-  },
-  {
-    path: "/projects/lei-app-2",
-    password: "project2pass",
-    title: "LEI Application 2",
-    description: "Access to this project requires authorization.",
-  },
-  {
-    path: "/blog/scaling-design-systems",
-    password: "blog1pass",
-    title: "Scaling Design Systems",
-    description: "This article contains proprietary information.",
-  },
+  // {
+  //   path: "/projects/lei-app-1",
+  //   password: "project1pass",
+  //   title: "LEI Application 1",
+  //   description: "This project contains confidential information about our educational platform.",
+  // },
+  // {
+  //   path: "/projects/lei-app-2",
+  //   password: "project2pass",
+  //   title: "LEI Application 2",
+  //   description: "Access to this project requires authorization.",
+  // },
+  // {
+  //   path: "/blog/scaling-design-systems",
+  //   password: "blog1pass",
+  //   title: "Scaling Design Systems",
+  //   description: "This article contains proprietary information.",
+  // },
 ]
 
 // Provider component

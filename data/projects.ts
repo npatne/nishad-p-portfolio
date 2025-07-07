@@ -13,7 +13,7 @@ export const projects: ProjectContent[] = [
     team: "Cross-functional team of 12 (designers, developers, educators)",
     color: "purple",
     featured: true, // Keep featured
-    image: "/placeholder.svg?height=600&width=800", // Add image
+    image: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/MacBook%20Pro%2016s-QWnsuqcJLea22YO6n6sAP8bC8VZsPs.png", // Add image
     tags: ["UX Research", "Design Systems", "Prototyping"],
     sections: [
       {

@@ -20,7 +20,7 @@ export default function ProjectCard({ project, layout = "horizontal" }: ProjectC
           <img
             src={project.image || "/placeholder.svg"}
             alt={project.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
         </div>
         <div className="lg:w-1/2 p-8 flex flex-col justify-between items-end">
@@ -59,7 +59,7 @@ export default function ProjectCard({ project, layout = "horizontal" }: ProjectC
             <img
               src={project.image || "/placeholder.svg"}
               alt={project.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
           <div className="p-6 flex flex-col justify-between items-end">

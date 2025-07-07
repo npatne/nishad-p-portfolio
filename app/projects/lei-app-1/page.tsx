@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { PasswordProtection } from "@/components/password-protection"
 import { projects } from "@/data/projects" 
-import { ProjectSection, ImagePosition } from "@/components/projectSection"
+import { ProjectSection, ImagePosition, ImageData } from "@/components/projectSection"
 
 // Define the sections for this specific project with the enhanced structure
 const projectSectionsContent = [
@@ -14,25 +14,64 @@ const projectSectionsContent = [
     content:
       "LEI Application 1 is a comprehensive educational platform designed to help K-12 teachers create, manage, and deliver interactive lessons to their students. The platform needed to be intuitive for teachers with varying levels of technical expertise while providing powerful features for content creation and student engagement tracking.",
     image: "/placeholder.svg?height=600&width=800",
-    imagePosition: "right" // Example of different layout positions
+    imagePosition: "right" // Single image example
   },
   {
     content:
       "I led a series of user interviews, contextual inquiries, and surveys with over 50 teachers across different grade levels and subject areas. This research revealed key pain points in existing educational tools and opportunities for innovation in our platform.",
-    image: "/placeholder.svg?height=600&width=800",
+    // Example with multiple images (carousel)
+    images: [
+      {
+        src: "/placeholder.svg?height=600&width=800",
+        alt: "User interview session",
+        caption: "Conducting user interviews with K-12 teachers"
+      },
+      {
+        src: "/placeholder.svg?height=600&width=800",
+        alt: "Survey results visualization",
+        caption: "Survey results showing teacher pain points"
+      },
+      {
+        src: "/placeholder.svg?height=600&width=800",
+        alt: "Research findings summary",
+        caption: "Key findings from our research phase"
+      }
+    ],
     imagePosition: "left"
   },
   {
     content:
       "## Research Findings\n\nBased on our research findings, I created user personas, journey maps, and information architecture for the platform. I then developed wireframes and interactive prototypes, which were tested with teachers in multiple iterations to refine the user experience.\n\n* **Pain point 1:** Existing tools were too complex\n* **Pain point 2:** Lack of student engagement tracking\n* **Pain point 3:** Poor content organization",
-    image: "/placeholder.svg?height=600&width=800",
+    // Another carousel example
+    images: [
+      {
+        src: "/placeholder.svg?height=600&width=800",
+        alt: "User personas",
+        caption: "Teacher personas based on research"
+      },
+      {
+        src: "/placeholder.svg?height=600&width=800",
+        alt: "User journey map",
+        caption: "Journey map showing teacher workflow"
+      },
+      {
+        src: "/placeholder.svg?height=600&width=800",
+        alt: "Information architecture",
+        caption: "Platform information architecture"
+      },
+      {
+        src: "/placeholder.svg?height=600&width=800",
+        alt: "Wireframes",
+        caption: "Low-fidelity wireframes"
+      }
+    ],
     imagePosition: "top"
   },
   {
     content:
       "Working closely with developers, I ensured that the design vision was implemented accurately while making pragmatic adjustments based on technical constraints. I created a comprehensive design system to maintain consistency across the platform and facilitate future development.",
     image: "/placeholder.svg?height=600&width=800",
-    imagePosition: "bottom"
+    imagePosition: "bottom" // Single image example
   },
   {
     content:
@@ -49,6 +88,7 @@ const projectSections = projectInfo?.sections.map(
     title: section.title,
     content: projectSectionsContent[index].content,
     image: projectSectionsContent[index].image,
+    images: projectSectionsContent[index].images,
     imagePosition: projectSectionsContent[index].imagePosition || "bottom",
   })
 );
@@ -177,11 +217,12 @@ export default function LEIApp1Page() {
                 </Button>
               </div>
               
-              {/* Using the new ProjectSection component */}
+              {/* Using the enhanced ProjectSection component */}
               <ProjectSection
                 title={section.title}
                 content={section.content}
                 image={section.image}
+                images={section.images}
                 imageAlt={`${projectInfo?.title} - ${section.title}`}
                 imagePosition={section.imagePosition as ImagePosition}
                 projectTitle={projectInfo?.title}

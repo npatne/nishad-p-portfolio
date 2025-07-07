@@ -17,7 +17,10 @@ export default function Home() {
       {/* Hero section */}
       <section className="py-16 px-16 md:px-10 animate-fadeIn">
         <div className="md:max-w-5xl 	lg:max-w-7xl">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">UX Designer & Engineer</h1>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-primary">Nishad Patne,</h1>
+          <h2 className="text-2xl md:text-3xl  font-semibold text-muted-foreground mb-8 animate-fadeIn animation-delay-100">
+            UX Designer & Engineer
+          </h2>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-fadeIn animation-delay-100">
             Creating intuitive, scalable, and elegant user experiences through research-driven design and engineering
             excellence.

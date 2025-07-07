@@ -33,10 +33,13 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen py-12 px-6 md:px-10 md:max-w-5xl lg:max-w-7xl">
       <header className="mb-12">
-        <h1 className="text-4xl font-bold mb-4">Contact</h1>
+        <h1 className="text-4xl font-bold mb-5">Hellooo, wanna say hi?</h1>
         {/* Updated introductory text */}
         <p className="text-xl text-muted-foreground max-w-3xl">
           Feel free to reach out via email or connect with me on LinkedIn using the links below.
+          I'm always open to new opportunities and collaborations!
+
+    
         </p>
       </header>
 
@@ -66,7 +69,7 @@ export default function ContactPage() {
                   onClick={() => copyToClipboard(emailAddress, 'email')}
                   aria-label="Copy email address"
                 >
-                  {copiedEmail ? <Check className="h-4 w-4 text-green-600" /> : <ClipboardCopy className="h-4 w-4" />}
+                  {copiedEmail ? <Check className="h-4 w-4 text-white" /> : <ClipboardCopy className="h-4 w-4" />}
                 </Button>
               </CardContent>
             </Card>
