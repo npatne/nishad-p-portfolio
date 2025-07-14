@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { getActiveCaseStudyLiteral } from "@/data/projects" 
 // Import Tooltip components
 import {
   Tooltip,
@@ -112,11 +113,12 @@ const isDetailPage = (path: string): boolean => {
 const getActiveCaseStudyFromPath = (path: string): string | undefined => {
   if (typeof path !== 'string') return undefined; // Add type check
   if (path.startsWith("/projects/")) {
-    return path.split("/").pop() || path;
+    const subpath= path.split("/").pop() || path;
+    return getActiveCaseStudyLiteral(subpath);
   }
-  if (path.startsWith("/blog/")) { 
-    return path.split("/").pop() || path;
-  }
+  // if (path.startsWith("/blog/")) {  // no blog ai for now.
+  //   return path.split("/").pop() || path;
+  // }
   return undefined;
 }
 

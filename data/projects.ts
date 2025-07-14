@@ -3,44 +3,59 @@ import type { ProjectContent } from "@/types/project"
 export const projects: ProjectContent[] = [
   {
     id: "project1",
-    slug: "lei-app-1",
-    title: "LEI Application 1",
-    subtitle: "Educational Platform for K-12 Teachers",
+    slug: "wat-researcher",
+    title: "WAT Researcher",
+    subtitle: "Desktop-First Text Analytics",
     description:
-      "A comprehensive platform designed to help K-12 teachers create, manage, and deliver interactive lessons to their students.",
-    role: "Lead UX Designer & Researcher",
-    duration: "8 months",
-    team: "Cross-functional team of 12 (designers, developers, educators)",
-    color: "purple",
+      "A case study in strategic product pivoting, describing the redesign and engineering of a desktop-first academic NLP tool to replace an aging desktop tool.",
+    role: "Sole UX Designer & Engineer",
+    duration: "6 months",
+    team: "Team of 3 (UX Designer & Engineer - Me, Project Manager, Principal Investigator)",
+    color: "#008394",
     featured: true, // Keep featured
-    image: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/MacBook%20Pro%2016s-QWnsuqcJLea22YO6n6sAP8bC8VZsPs.png", // Add image
-    tags: ["UX Research", "Design Systems", "Prototyping"],
+    image: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/iMac%2024%20inch.jpg", // Add image
+    tags: ["Desktop App UX", "UX Engineering", "NLP", "Electron", "Strategic Pivot"],
     sections: [
       {
-        id: "project-overview",
-        title: "Project Overview",
-        // content removed
+        id: "tldr",
+        title: "TL;DR",
+        
       },
       {
-        id: "research-discovery",
-        title: "Research & Discovery",
-        // content removed
+        id: "problem",
+        title: "The Problem",
+        
       },
       {
-        id: "design-process",
-        title: "Design Process",
-        // content removed
+        id: "role",
+        title: "Role & Contributions",
+        
       },
       {
-        id: "implementation",
-        title: "Implementation",
-        // content removed
+        id: "process",
+        title: "The Process",
+        
       },
       {
-        id: "results-impact",
-        title: "Results & Impact",
-        // content removed
+        id: "solution",
+        title: "The Solution",
+        
       },
+      {
+        id: "outcome",
+        title: "Outcomes and Impact",
+        
+      },
+      {
+        id:"tech",
+        title:"Tech Stack",
+      },
+      {
+        id:'career',
+        title:"Career Alignment"
+
+      }
+      
     ],
   },
   {
@@ -172,3 +187,16 @@ export const projects: ProjectContent[] = [
     
   },
 ]
+
+export const getActiveCaseStudyLiteral = (slug: string): string => {
+  let literal = "";
+   switch (slug) {
+    case "wat-researcher":
+      literal = "WAT Researcher: Desktop-First Text Analytics";
+      break;
+    case "lei-app-2":
+      literal = "LEI Application 2";
+      break;
+   }
+  return literal  
+}
