@@ -34,14 +34,15 @@ const projectSectionsContent = [
         caption: "Legacy desktop app",
       },
     ],
-    imagePosition: "right", // Single image example
+    imagePosition: "right",
   },
   {
     content:
       "The **Learning Engineering Institute (LEI)** needed to replace **Coh-Metrix**, a legacy tool essential to over **5,000 global researchers** *(and counting)*. I was initially tasked with designing and developing a modern, web-based replacement.\n\nWhile I successfully **designed and delivered the front-end interface** with Angular, the project hit a strategic wall: the backend analysis was so **computationally intensive** that a web-based service would be **prohibitively expensive** and **unscalable** for our servers. The project was at risk.\n\nRecognizing this critical flaw, I **took the initiative**. I **researched, prototyped, and championed** a pivot to a **desktop-first strategy**, shifting the computational load to the user's machine. This move was approved, **transforming the project's trajectory and scope**.",
     image:
       "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/Screenshot%202025-07-13%20at%206.22.55%E2%80%AFPM.png",
-    imagePosition: "left", // Single image example
+    imagePosition: "left",
+    singleImageCaption: "Coh-Meteric App, recorded citations",
   },
   {
     content:
@@ -49,6 +50,7 @@ const projectSectionsContent = [
     image:
       "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/Frame%20238.png",
     imagePosition: "bottom", // Single image example
+    singleImageCaption: "Figma Design document and Github commits overview.",
   },
   {
     content:
@@ -73,14 +75,14 @@ const projectSectionsContent = [
     imagePosition: "bottom",
     images: [
       {
+        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/desktop%20interface.png",
+        alt: "WAT Researcher Desktop hight fedility mockup",
+        caption: "WAT Researcher Desktop high fedility mockup",
+      },
+      {
         src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/web%20interface.png",
         alt: "WAT Researcher Web high fedility Mockup",
         caption: "WAT Researcher Web high fedility Mockup",
-      },
-      {
-        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/desktop%20interface.png",
-        alt: "WAT Researcher Desktop hight fedility mockup",
-        caption: "WAT Researcher Desktop hight fedility mockup",
       },
     ],
   },
@@ -110,6 +112,7 @@ const projectSections = projectInfo?.sections.map((section, index) => ({
   image: projectSectionsContent[index].image,
   images: projectSectionsContent[index].images,
   imagePosition: projectSectionsContent[index].imagePosition || "bottom",
+  singleImageCaption: projectSectionsContent[index]?.singleImageCaption, // Add this line
 }));
 
 export default function LEIApp1Page() {
@@ -256,6 +259,7 @@ export default function LEIApp1Page() {
                 imageAlt={`${projectInfo?.title} - ${section.title}`}
                 imagePosition={section.imagePosition as ImagePosition}
                 projectTitle={projectInfo?.title}
+                singleImageCaption={section.singleImageCaption} // Add this line
               />
             </section>
           ))}

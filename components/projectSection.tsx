@@ -17,6 +17,7 @@ export type ProjectSectionProps = {
   content: string
   image?: string
   imageAlt?: string
+  singleImageCaption?: string  // New field for single image caption
   images?: ImageData[]
   imagePosition?: ImagePosition
   projectTitle?: string
@@ -27,6 +28,7 @@ export const ProjectSection = ({
   content,
   image,
   imageAlt = "Project image",
+  singleImageCaption,  // Add the new prop here
   images,
   imagePosition = "bottom",
   projectTitle = "",
@@ -51,13 +53,22 @@ export const ProjectSection = ({
     if (!image) return null
     
     return (
-      <div className="cursor-pointer transition-transform hover:scale-[1.02] duration-300">
-        <img
-          src={image}
-          alt={imageAlt || `${projectTitle} - ${title}`}
-          className="w-full rounded-lg shadow-md object-cover"
-          onClick={() => setLightboxOpen(true)}
-        />
+      <div className="relative">
+        <div className="cursor-pointer transition-transform hover:scale-[1.02] duration-300">
+          <img
+            src={image}
+            alt={imageAlt || `${projectTitle} - ${title}`}
+            className="w-full rounded-lg shadow-md object-cover"
+            onClick={() => setLightboxOpen(true)}
+          />
+        </div>
+        
+        {/* Single image caption */}
+        {singleImageCaption && (
+          <div className="mt-2 text-sm prose prose-gray italic text-center">
+            {singleImageCaption}
+          </div>
+        )}
       </div>
     )
   }
@@ -79,6 +90,13 @@ export const ProjectSection = ({
             }}
           />
         </div>
+        
+        {/* Carousel caption in preview */}
+        {images[currentCarouselIndex].caption && (
+          <div className="mt-2 text-sm prose prose-gray italic text-center">
+            {images[currentCarouselIndex].caption}
+          </div>
+        )}
         
         {/* Navigation arrows for preview */}
         {images.length > 1 && (
@@ -103,7 +121,7 @@ export const ProjectSection = ({
             </button>
           </>
         )}
-
+        
         {/* Dots indicator */}
         {images.length > 1 && (
           <div className="flex justify-center mt-4 gap-2">
@@ -209,11 +227,20 @@ export const ProjectSection = ({
           <div className="max-w-screen-xl max-h-screen overflow-auto relative" onClick={(e) => e.stopPropagation()}>
             {/* Single image lightbox */}
             {!isCarousel && image && (
-              <img 
-                src={image} 
-                alt={imageAlt || `${projectTitle} - ${title}`}
-                className="max-w-full max-h-[90vh] mx-auto object-contain"
-              />
+              <div className="relative">
+                <img 
+                  src={image} 
+                  alt={imageAlt || `${projectTitle} - ${title}`}
+                  className="max-w-full max-h-[90vh] mx-auto object-contain"
+                />
+                
+                {/* Single image caption in lightbox */}
+                {singleImageCaption && (
+                  <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-3 rounded-lg text-center">
+                    {singleImageCaption}
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Carousel lightbox */}
