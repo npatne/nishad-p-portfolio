@@ -28,13 +28,13 @@ const projectSections = projectInfo?.sections.map((section, index) => ({
   id: section.id,
   title: section.title,
   content: projectSectionsContent[index].content,
-  image: projectSectionsContent[index].image,
+  //image: projectSectionsContent[index].image,
   images: projectSectionsContent[index].images,
   imagePosition: projectSectionsContent[index].imagePosition || "bottom",
-  singleImageCaption: projectSectionsContent[index]?.singleImageCaption, // Add this line
+  //singleImageCaption: projectSectionsContent[index]?.singleImageCaption, // Add this line
 }));
 
-export default function WATResearcherPage() {
+export default function LegacyPage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
@@ -173,12 +173,12 @@ export default function WATResearcherPage() {
               <ProjectSection
                 title={section.title}
                 content={section.content}
-                image={section.image}
+                //image={section.image}
                 images={section.images}
                 imageAlt={`${projectInfo?.title} - ${section.title}`}
                 imagePosition={section.imagePosition as ImagePosition}
                 projectTitle={projectInfo?.title}
-                singleImageCaption={section.singleImageCaption} // Add this line
+                //singleImageCaption={section.singleImageCaption} // Add this line
               />
             </section>
           ))}

@@ -12,6 +12,7 @@ export type BlogSection = {
   images?: { src: string; alt?: string; caption?: string }[]; // Add support for multiple images
   imageAlt?: string; // Optional image alt text
   imagePosition?: ImagePosition; // Optional image position
+  singleImageCaption?: string; // Optional single image caption
 };
 
 
@@ -54,6 +55,7 @@ export const blogPosts: BlogPostContent[] = [
         title: "Common Types of Dark Patterns",
         content: "Dark patterns come in many forms, and spotting them is the first step toward fighting back. Some of the most notorious types include:\n\n*   **Roach motels:** Easy to get into, hard to get out of (e.g., canceling subscriptions)\n*   **Forced continuity:** Automatically charging users after a free trial without clear notice\n*   **Trick questions:** Misleading language to confuse users into opting in\n*   **Hidden costs:** Unexpected fees appearing at the last step of checkout\n*   **Confirmshaming:** Guilt-tripping users for declining an offer or opting out",
         image: "/placeholder.svg?height=300&width=500",
+        singleImageCaption: "Caption 1",
         imagePosition: "left",
       },
       {

@@ -44,7 +44,11 @@ export const ProjectSection = ({
   // Helper to render the markdown content
   const renderContent = () => (
     <div className="prose prose-gray max-w-none">
-      <ReactMarkdown>{content}</ReactMarkdown>
+      <ReactMarkdown components={{
+        a: ({node, ...props}) => <a target="_blank" rel="noopener noreferrer" {...props} />
+      }}>
+        {content}
+      </ReactMarkdown>
     </div>
   )
 

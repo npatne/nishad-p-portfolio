@@ -59,6 +59,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
               imageAlt={section.imageAlt || `${post.title} - Section ${index + 1}`}
               imagePosition={section.imagePosition as ImagePosition} // Cast type if needed
               projectTitle={post.title} // Pass blog post title as projectTitle
+              singleImageCaption={section.singleImageCaption} // Add support for single image caption
             />
           </section>
         ))}

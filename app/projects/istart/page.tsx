@@ -34,7 +34,7 @@ const projectSections = projectInfo?.sections.map((section, index) => ({
   singleImageCaption: projectSectionsContent[index]?.singleImageCaption, // Add this line
 }));
 
-export default function WATResearcherPage() {
+export default function ISTARTPage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
