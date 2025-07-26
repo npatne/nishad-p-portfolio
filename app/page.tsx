@@ -82,7 +82,7 @@ export default function Home() {
                         {post.title}
                       </Link>
                     </h3>
-                    <span className="text-sm text-muted-foreground">{post.date}</span>
+                    <span className="text-xs text-muted-foreground">{post.date}</span>
                   </div>
                   <p className="text-muted-foreground mb-4">{post.excerpt}</p>
                   <div className="flex justify-between items-center">
