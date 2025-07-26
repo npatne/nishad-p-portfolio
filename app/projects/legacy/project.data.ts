@@ -9,14 +9,24 @@ export const projectContent = [
     
     images: [
       {
-        src: "https://your-image-url-here.com/image1.jpg",
-        alt: "Alt text for image 1",
-        caption: "Caption for image 1",
+        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/legacy-tba/framer%20portfolio.png",
+        alt: "Maximalist style portfolio, made on framer.",
+        caption: "Maximalist style portfolio, made on framer.",
       },
       {
-        src: "https://your-image-url-here.com/image2.jpg",
-        alt: "Alt text for image 2",
-        caption: "Caption for image 2",
+        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/legacy-tba/plugin.png",
+        alt: "Tooltip plugin for figma. 5.5 k+ users.",
+        caption: "Tooltip plugin for figma. 5.5 k+ users.",
+      },
+      {
+        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/legacy-tba/dont%20panic.png",
+        alt: "Don't Panic - Job scam prevention checklist and companion website",
+        caption: "Don't Panic - Job scam prevention checklist and companion website",
+      },
+      {
+        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/legacy-tba/webflow%20portfolio.png",
+        alt: "My very first portfolio, made using Webflow.",
+        caption: "My very first portfolio, made using Webflow.",
       },
     ],
     

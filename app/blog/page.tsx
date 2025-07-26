@@ -1,14 +1,50 @@
+"use client"
+
 import Link from "next/link"
-import { Calendar, Clock, ArrowRight } from "lucide-react"
+import { Calendar, Clock, ArrowRight, ArrowUpDown } from "lucide-react"
 import { getAllBlogPosts } from "@/lib/content-manager"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export default function BlogPage() {
-  const blogPosts = getAllBlogPosts()
+  const allBlogPosts = getAllBlogPosts()
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+  
+  // Sort blog posts by date
+  const blogPosts = [...allBlogPosts].sort((a, b) => {
+    const dateA = new Date(a.date)
+    const dateB = new Date(b.date)
+    return sortOrder === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime()
+  })
 
   return (
-    <div className="min-h-screen py-12 px-6 md:px-10 md:max-w-5xl 	lg:max-w-7xl">
+    <div className="min-h-screen py-12 px-6 md:px-10 md:max-w-5xl lg:max-w-7xl">
       <header className="mb-12">
-        <h1 className="text-4xl font-bold mb-4">Blog</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-4xl font-bold">Blogs</h1>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="ml-auto">
+                <ArrowUpDown className="mr-2 h-4 w-4" />
+                Sort by Date
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setSortOrder("desc")}>
+                Newest First
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortOrder("asc")}>
+                Oldest First
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <p className="text-xl text-muted-foreground max-w-3xl">
           Thoughts, insights, and explorations on UX design, engineering, and the intersection of both disciplines.
         </p>

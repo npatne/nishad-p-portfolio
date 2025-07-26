@@ -14,7 +14,7 @@ export const projects: ProjectContent[] = [
     color: "#008394",
     featured: true, // Keep featured
     image:
-      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/iMac%2024%20inch.jpg", // Add image
+      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/iMac%2024%20inch.png", // Add image
     tags: [
       "Desktop App UX",
       "UX Engineering",
@@ -28,8 +28,8 @@ export const projects: ProjectContent[] = [
         title: "TL;DR",
       },
       {
-        id: "problem",
-        title: "Problem",
+        id: "Challenge",
+        title: "Challenge",
       },
       {
         id: "role",
@@ -71,7 +71,7 @@ export const projects: ProjectContent[] = [
     color: "#008394",
     featured: true, // Keep featured
     image:
-      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/iMac%2024%20inch.jpg", // Add image
+      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/wat/mockup.png", // Add image
     tags: [
       "Writing Analytics",
       "UX Research",
@@ -140,7 +140,7 @@ export const projects: ProjectContent[] = [
     color: "#7F47A6",
     featured: true, // Keep featured
     image:
-      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/iMac%2024%20inch.jpg", // Add image
+      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/istart/ZenBook%20Duo%2014.png", // Add image
     tags: ["UX Design", "Gamification", "Education Technology", "NLP", "AI Integration"],
         sections: [
       {
@@ -195,7 +195,7 @@ export const projects: ProjectContent[] = [
     color: "#663399",
     featured: true, // Keep featured
     image:
-      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/iMac%2024%20inch.jpg", // Add image
+      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/meta-portfolio/Mac%20Studio.png", // Add image
     tags: ["RAG", "LLM", "Qdrant", "Haystack", "AI Portfolio"],
         sections: [
       {
@@ -242,7 +242,7 @@ export const projects: ProjectContent[] = [
     color: "#352038",
     featured: false, // Keep featured
     image:
-      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/iMac%2024%20inch.jpg", // Add image
+      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/legacy-tba/picture%20combo.png", // Add image
     tags: ["Previous portfolios and work", "Legacy Projects", "under construction"],
         sections: [
       {

@@ -1,4 +1,4 @@
-export const projectSlug = 'wat-researcher'
+export const projectSlug = "wat-researcher";
 export const projectContent = [
   {
     content:
@@ -24,10 +24,10 @@ export const projectContent = [
   },
   {
     content:
-      "The Learning Engineering Institute (LEI) needed a modern replacement for Coh-Metrix, a legacy tool used by over 5,000 researchers worldwide. My initial role was to **design and build the new web-based version**.\n\nI completed the front-end with Angular, but we ran into a major roadblock. The backend analysis (processing of text) was so demanding that running it as a web service would be too expensive and difficult to scale. The project's future was at risk.\n\nSeeing this issue, I researched and prototyped _(design and code)_ a **different approach**:\n\n**A desktop-first strategy** that would use the researcher's own computer for processing. My proposal was approved, which completely changed the direction of the project.",
+      "- **Legacy System Replacement:** The Learning Engineering Institute (LEI) required a modern, web-based alternative to Coh-Metrix, an outdated yet widely-used research tool serving over 5,000 researchers worldwide.\n\n- **Front-end Completion and Backend Roadblock:** Although the front-end was successfully built using Angular, the backend text-analysis component proved extremely resource-intensive. Hosting this analysis as a web-based service would lead to significant operational expenses and scaling difficulties.\n\n- **Scalability and Cost Risks:** Due to the high computational demands of backend processing, the project's feasibility and sustainability faced critical risks, jeopardizing the overall success and continuation of the initiative.",
     image:
       "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/WAT%20Researcher/Screenshot%202025-07-13%20at%206.22.55%E2%80%AFPM.png",
-    imagePosition: "left",
+    imagePosition: "right",
     singleImageCaption: "Coh-Metrix App, recorded citations",
   },
   {
@@ -73,12 +73,15 @@ export const projectContent = [
     ],
   },
   {
-    content:"This project is scheduled to launch and replace an essential tool for a large academic community.\n\n- **Strategic Impact**: Changing from a costly web architecture solved a major business challenge and will save the institute significantly on server and maintenance costs.\n\n- **Organizational Impact**: I built the institute's first-ever pipeline for developing and distributing a desktop application, a completely new capability for the organization.\n\n- **Product Impact**: We delivered a product that is more powerful and versatile than originally planned, better meeting the needs of both casual and advanced users.\n\n- **Career Impact**: This project was a key step for me into a role with more strategic leadership and mentorship, proving I can guide a technical product from concept to launch."
+    content:
+      "This project is scheduled to launch and replace an essential tool for a large academic community.\n\n- **Strategic Impact**: Changing from a costly web architecture solved a major business challenge and will save the institute significantly on server and maintenance costs.\n\n- **Organizational Impact**: I built the institute's first-ever pipeline for developing and distributing a desktop application, a completely new capability for the organization.\n\n- **Product Impact**: We delivered a product that is more powerful and versatile than originally planned, better meeting the needs of both casual and advanced users.\n\n- **Career Impact**: This project was a key step for me into a role with more strategic leadership and mentorship, proving I can guide a technical product from concept to launch.",
   },
   {
-    content:"**Tech & Methods**\n\n- **Frontend**: Angular, HTML5, CSS3\n- **Backend**: Django, Python, SQLite\n- **Desktop**: Electron, PyInstaller, Shell Scripting\n- **Design**: Figma, Wireframing, Prototyping, User Flow Mapping\n- **Process**: Agile Development, Stakeholder Management, Technical Strategy"
+    content:
+      "**Tech & Methods**\n\n- **Frontend**: Angular, HTML5, CSS3\n- **Backend**: Django, Python, SQLite\n- **Desktop**: Electron, PyInstaller, Shell Scripting\n- **Design**: Figma, Wireframing, Prototyping, User Flow Mapping\n- **Process**: Agile Development, Stakeholder Management, Technical Strategy",
   },
   {
-    content:"This project shows my ability to lead a complex, multi-platform product from concept to launch, combining the strategic thinking and technical skill required for senior UX Designer or UX Engineer roles."
-  }
+    content:
+      "This project shows my ability to lead a complex, multi-platform product from concept to launch, combining the strategic thinking and technical skill required for senior UX Designer or UX Engineer roles.",
+  },
 ];

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getActiveCaseStudyLiteral } from "@/data/projects" 
+import ReactMarkdown from "react-markdown"
 // Import Tooltip components
 import {
   Tooltip,
@@ -704,7 +705,9 @@ export default function Chatbot() {
                     )}
                   >
                     {/* Render message content - consider using a markdown renderer if needed */}
+                    <ReactMarkdown>
                     {message.content}
+                    </ReactMarkdown>
                      {/* Optionally display response time for assistant messages */}
                      {message.role === 'assistant' && message.responseTime && (
                        <div className="text-xs opacity-70 mt-1 text-right">

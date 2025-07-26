@@ -76,9 +76,16 @@ export default function Sidebar() {
   // Add projects to dependency array if its content could change, though likely static
   }, [pathname])
 
-  // Toggle project sections visibility
+  // Toggle project sections visibility - modified to close other sections
   const toggleProjectSections = (slug: string) => {
-    setOpenProjectSlugs((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]))
+    setOpenProjectSlugs((prev) => {
+      // If this slug is already open, close it
+      if (prev.includes(slug)) {
+        return prev.filter((s) => s !== slug)
+      }
+      // If opening a new slug, close all others and only open this one
+      return [slug]
+    })
   }
 
   // Check if a project is the current one
@@ -197,7 +204,7 @@ export default function Sidebar() {
                           <Link
                             href={`/projects/${project.slug}`}
                             className={cn(
-                              "flex-1 block p-2 rounded-md hover:bg-secondary/80 transition-colors text-sm text-foreground",
+                              "flex-1 block p-2 rounded-md hover:bg-secondary/40 transition-colors text-sm text-foreground",
                               isCurrentProject(project.slug) && "bg-secondary/80 font-medium",
                             )}
                           >
@@ -205,7 +212,7 @@ export default function Sidebar() {
                           </Link>
                           <button
                             onClick={() => toggleProjectSections(project.slug)}
-                            className="p-1 hover:bg-secondary/80 rounded-md text-foreground"
+                            className="p-1 hover:bg-secondary/60 rounded-md text-foreground"
                             aria-label={
                               openProjectSlugs.includes(project.slug) ? "Collapse sections" : "Expand sections"
                             }
@@ -219,17 +226,16 @@ export default function Sidebar() {
                           </button>
                         </div>
 
-                        {/* Project sections - Visibility now depends on pathname via openProjectSlugs */}
+                        {/* Project sections - Modified highlight color */}
                         {openProjectSlugs.includes(project.slug) && (
                           <div className="pl-4 space-y-1 mt-1">
-                            {/* Use project.sections from the imported data */}
                             {project.sections.map((section) => (
                               <Link
                                 key={section.id}
                                 href={`/projects/${project.slug}#${section.id}`}
                                 className={cn(
                                   "block p-2 rounded-md hover:bg-secondary/80 transition-colors text-xs text-foreground",
-                                  isSectionActive(project.slug, section.id) && "bg-secondary/80 font-medium",
+                                  isSectionActive(project.slug, section.id) && "bg-secondary/40 font-medium"
                                 )}
                               >
                                 {section.title}
@@ -253,7 +259,7 @@ export default function Sidebar() {
               )}
             >
               <FileText className="h-5 w-5" />
-              {!isCollapsed && <span>Blog</span>}
+              {!isCollapsed && <span>Blogs</span>}
             </Link>
 
             <Link

@@ -79,6 +79,14 @@ module.exports = {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0)" },
         },
+         wave: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '15%':      { transform: 'rotate(14deg)' },
+          '30%':      { transform: 'rotate(-8deg)' },
+          '45%':      { transform: 'rotate(14deg)' },
+          '60%':      { transform: 'rotate(-4deg)' },
+          '75%':      { transform: 'rotate(10deg)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -86,6 +94,7 @@ module.exports = {
         fadeIn: "fadeIn 0.3s ease-in-out",
         slideInRight: "slideInRight 0.3s ease-in-out",
         slideInLeft: "slideInLeft 0.3s ease-in-out",
+        wave: 'wave 1s ease-in-out infinite',
       },
     },
   },

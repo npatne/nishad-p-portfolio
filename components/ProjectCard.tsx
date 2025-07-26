@@ -16,7 +16,7 @@ export default function ProjectCard({ project, layout = "horizontal" }: ProjectC
         key={project.id}
         className="project-card flex flex-col lg:flex-row gap-8 rounded-xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300"
       >
-        <div className="lg:w-1/2 h-80 lg:h-auto overflow-hidden">
+        <div className="lg:w-1/2 h-80 lg:h-auto overflow-hidden p-2">
           <img
             src={project.image || "/placeholder.svg"}
             alt={project.title}
@@ -55,7 +55,7 @@ export default function ProjectCard({ project, layout = "horizontal" }: ProjectC
     return (
       <div key={project.id} className="card overflow-hidden border border-border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="grid md:grid-cols-2 gap-0"> {/* Removed gap-6 */}
-          <div className="aspect-video-not-needed overflow-hidden">
+          <div className="aspect-video-not-needed overflow-hidden p-1">
             <img
               src={project.image || "/placeholder.svg"}
               alt={project.title}
