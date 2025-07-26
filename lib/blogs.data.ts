@@ -18,7 +18,7 @@ export const blogData = [
         image:
           "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/blogs/blog%201%20thumb.png",
         singleImageCaption:
-          "Portfolio in UX or other wise is a ever running process of imptovements, previous one is a stepping stone for the next one.",
+          "Portfolio in UX or otherwise is an ever-running process of improvements; the previous one is a stepping stone for the next one.",
         imagePosition: "bottom",
       },
       {

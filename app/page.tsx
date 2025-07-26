@@ -77,7 +77,7 @@ export default function Home() {
               <article key={post.id} className="card p-6 hover:shadow-md transition-shadow duration-300">
                 <div>
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-bold">
+                    <h3 className="text-xl font-bold me-2">
                       <Link href={`/blog/${post.slug}`} className="hover:text-primary transition-colors">
                         {post.title}
                       </Link>
