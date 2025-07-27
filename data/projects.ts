@@ -233,7 +233,7 @@ export const projects: ProjectContent[] = [
     slug: "legacy",
     title: "Legacy and TBAs",
     subtitle:
-      "Legacy and Underconstruction projects.",
+      "Legacy work and Underconstruction projects.",
     description:
       "This project card and page currently serve as a placeholder, providing links to my previous works and portfolios until I can migrate them to this new location.",
     role: "personal projects",
@@ -247,7 +247,7 @@ export const projects: ProjectContent[] = [
         sections: [
       {
         id: "CTA",
-        title: "CTA",
+        title: "Highlights",
       },
     ],
   },
