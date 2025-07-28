@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, FolderKanban, FileText, User, AlertCircle, Mail, ChevronDown, Menu, X, ChevronLeft } from "lucide-react"
@@ -15,7 +15,24 @@ import { projects } from "@/data/projects" // Import projects from central data
 
 export default function Sidebar() {
   const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(true)
+  // Initialize to false and don't change based on pathname in initial state
+  const [isOpen, setIsOpen] = useState(false)
+  
+  // Use a ref to track if this is the first render
+  const isFirstRender = useRef<boolean>(true)
+
+  
+  useEffect(() => {
+    // Only run this effect after the first render to avoid hydration mismatch
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      // Only open the sidebar if we're not on the homepage
+      if (pathname !== "/") {
+        setIsOpen(true)
+      }
+    }
+  }, [pathname])
+  
   const [isCollapsed, setIsCollapsed] = useState(false)
   // Initialize projectsOpen to true so the project list is always shown by default
   const [projectsOpen, setProjectsOpen] = useState(true) 

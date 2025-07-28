@@ -201,14 +201,33 @@ const callChatApi = async (query: string, sessionId: string, mode: ChatMode, act
 
 export default function Chatbot() {
   const pathname = usePathname()
+  // Keep isOpen initialized to false
   const [state, setState] = useState<ChatbotState>({
     isOpen: false,
     isCollapsed: false,
-    messages: { general: [], specific: [] }, // Initialize both modes
-    sessionId: null, // Start with null session ID
+    messages: { general: [], specific: [] },
+    sessionId: null,
     mode: "general",
-    // activeCaseStudy will be set in useEffect
   })
+  
+  // Use a ref to track if this is the first render
+  const isFirstRender = useRef(true)
+  
+  // Add this effect to handle path-based opening, but only after first render
+  useEffect(() => {
+    // Only run this effect after the first render to avoid hydration mismatch
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      // Only open the chatbot if we're not on the homepage
+      if (pathname !== "/") {
+        setState(prev => ({
+          ...prev,
+          isOpen: true
+        }))
+      }
+    }
+  }, [pathname])
+  
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isInitializing, setIsInitializing] = useState(false) // For session creation feedback

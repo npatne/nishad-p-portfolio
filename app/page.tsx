@@ -1,43 +1,93 @@
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { getAllBlogPosts } from "@/lib/content-manager"
-import { projects } from "@/data/projects" // Import centralized projects
-import ProjectCard from "@/components/ProjectCard" // Import the new component
+"use client";
 
-// Remove local featuredProjects definition
-// const featuredProjects = [ ... ]
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getAllBlogPosts } from "@/lib/content-manager";
+import { projects } from "@/data/projects";
+import ProjectCard from "@/components/ProjectCard";
+import React from "react";
+import Orb from "@/components/orb";
+import TextType from "@/components/type-text";
 
 export default function Home() {
-  const recentBlogPosts = getAllBlogPosts().slice(0, 3)
-  const featuredProjectsData = projects.filter(p => p.featured) // Filter from centralized data
+  const recentBlogPosts = getAllBlogPosts().slice(0, 3);
+  const featuredProjectsData = projects.filter((p) => p.featured);
 
   return (
     <div className="min-h-screen">
       {/* Hero section */}
-      <section className="py-16 px-16 md:px-10 animate-fadeIn">
-        <div className="md:max-w-5xl 	lg:max-w-7xl">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-primary">Nishad Patne,</h1>
-          <h2 className="text-2xl md:text-3xl  font-semibold text-muted-foreground mb-8 animate-fadeIn animation-delay-100">
-            UX Designer & Engineer
-          </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-fadeIn animation-delay-100">
-            Creating intuitive, scalable, and elegant user experiences through research-driven design and engineering
-            excellence.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-5 animate-fadeIn animation-delay-200">
+<section className="py-12 md:py-16 px-6 md:px-10 animate-fadeIn flex items-center justify-center min-h-[85vh]">
+  <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-8">
+    
+    {/* Static Introduction - Top */}
+    <div className="space-y-4">
+      <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-primary animate-fadeIn animation-delay-100">
+        Nishad Patne
+      </h1>
+      <h2 className="text-xl md:text-2xl font-semibold text-muted-foreground animate-fadeIn animation-delay-200">
+        UX Designer & Engineer
+      </h2>
+      <p className="text-base md:text-lg text-muted-foreground max-w-2xl animate-fadeIn animation-delay-300">
+        Creating intuitive, scalable, and elegant user experiences through
+        research-driven design and engineering excellence.
+      </p>
+    </div>
 
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="hover:bg-accent hover:text-accent-foreground hover:border-accent"
-            >
-              <Link href="/about">About Me</Link>
-            </Button>
-          </div>
+    {/* Center Attraction - Orb */}
+    <div 
+      className="w-60 h-60 md:w-[300px] md:h-[300px] mt-8"
+      style={{
+        filter: "drop-shadow(0 8px 32px rgba(147, 105, 246, 0.46))",
+      }}
+    >
+      <Orb
+        hoverIntensity={0.2}
+        rotateOnHover={true}
+        hue={270}
+        forceHoverState={false}
+      />
+    </div>
+
+    {/* Interactive Typed Text - Below Orb */}
+    <div className="text-center -mt-4">
+      <TextType
+        text={[
+          "👋 Hey! This portfolio is interactive",
+          "It can chat about my projects & skills", 
+          "Try the chat box on the right →",
+          "Let's have a conversation!"
+        ]}
+        className="text-xl md:text-2xl font-bold leading-relaxed"
+        textColors={['hsl(var(--muted-foreground))']}
+        typingSpeed={30}
+        pauseDuration={4000}
+        showCursor={true}
+        cursorCharacter="_"
+        cursorClassName="text-primary"
+        loop={true}
+      />
+    </div>
+
+    {/* Subtle scroll CTA - Bottom */}
+    <div
+      className="pt-8 animate-fadeIn animation-delay-400 cursor-pointer"
+      onClick={() =>
+        window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
+      }
+    >
+      <div className="flex flex-col items-center group">
+        <p className="text-sm text-muted-foreground mb-2 group-hover:text-primary transition-colors">
+          Scroll to explore
+        </p>
+        <div className="w-6 h-10 border-2 border-muted-foreground rounded-full flex justify-center pt-2 group-hover:border-primary transition-colors">
+          <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce group-hover:bg-primary transition-colors"></div>
         </div>
-      </section>
+      </div>
+    </div>
+    
+  </div>
+</section>
 
       {/* Featured projects - ONE PER LINE, MUCH LARGER */}
       <section className="px-6 md:px-10 py-20 animate-slideUp animation-delay-300">
@@ -48,7 +98,11 @@ export default function Home() {
           <div className="space-y-16">
             {/* Use ProjectCard component */}
             {featuredProjectsData.map((project) => (
-              <ProjectCard key={project.id} project={project} layout="horizontal" />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                layout="horizontal"
+              />
             ))}
           </div>
 
@@ -74,19 +128,29 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-8">Featured Blog Posts</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {recentBlogPosts.map((post) => (
-              <article key={post.id} className="card p-6 hover:shadow-md transition-shadow duration-300">
+              <article
+                key={post.id}
+                className="card p-6 hover:shadow-md transition-shadow duration-300"
+              >
                 <div>
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="text-xl font-bold me-2">
-                      <Link href={`/blog/${post.slug}`} className="hover:text-primary transition-colors">
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="hover:text-primary transition-colors"
+                      >
                         {post.title}
                       </Link>
                     </h3>
-                    <span className="text-xs text-muted-foreground">{post.date}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {post.date}
+                    </span>
                   </div>
                   <p className="text-muted-foreground mb-4">{post.excerpt}</p>
                   <div className="flex justify-between items-center">
-                    <div className="text-sm text-muted-foreground">{post.readTime}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {post.readTime}
+                    </div>
                     <Link
                       href={`/blog/${post.slug}`}
                       className="inline-flex items-center text-primary hover:underline font-medium"
@@ -118,7 +182,8 @@ export default function Home() {
         <div className="md:max-w-5xl 	lg:max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">Let's Connect</h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Have a project in mind or just want to chat about UX design and engineering? I'd love to hear from you!
+            Have a project in mind or just want to chat about UX design and
+            engineering? I'd love to hear from you!
           </p>
           <Button
             asChild
@@ -133,5 +198,5 @@ export default function Home() {
         </div>
       </section>
     </div>
-  )
+  );
 }
