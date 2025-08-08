@@ -127,7 +127,7 @@ export default function AboutPage() {
           </p>
           <Button asChild>
             <a
-              href="https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/2025-8-nishad_anil_patne_resume.pdf"
+              href="https://drive.google.com/drive/folders/1P2qB9bImdds9IjfIKnIKNdqmCnQmopyH?usp=sharing"
               download="Nishad_Patne_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
