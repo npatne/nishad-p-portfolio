@@ -99,7 +99,7 @@ export const projectContent = [
         caption: "iSTART-Avatar System Legacy: A static, limited avatar system that restricted the number of avatars available.",
       },
       {
-        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/istart/avatar%20now.png",
+        src: "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/istart/new%20avatar.png",
         alt: "iSTART-Avatar System",
         caption: "iSTART-Avatar System: A dynamic, programmatic avatar system that allows for the creation of unique avatars for each student.",
       },

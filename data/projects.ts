@@ -128,6 +128,69 @@ export const projects: ProjectContent[] = [
   },
   {
     id: "project3",
+    slug: "allie-skaimart",
+    title: "Allie from Skaimart",
+    subtitle:
+      "Envisioning the Next Generation of E‑Commerce Chatbots",
+    description:
+      "Allie is a next-gen e-commerce assistant that gives shoppers real control through personalized, extensible profiles and enhanced UX for deeper AI integration.",
+    role: "Lead UX Designer",
+    duration: "Sept 2025",
+    team: "Me (UX Lead), Gaurav Basantani (collaborating UX Designer)",
+    color: "#078FC5",
+    featured: true, // Keep featured
+    image:
+      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/allie/card%20image.png", // Add image
+    tags: ["UX Design", "E-Commerce", "Chatbot", "User Agency", "Personalization"],
+        sections: [
+      {
+        id: "tldr",
+        title: "TL;DR",
+      },
+      {
+        id: "problem",
+        title: "Challenge",
+      },
+      {
+        id: "role",
+        title: "Role",
+      },
+      {
+        id: "inquiry",
+        title: "Inquiry",
+      },
+      {
+        id: "research",
+        title: "Research",
+      },
+      {
+        id: "solution",
+        title: "Ideation and Solution",
+      },
+      {
+        id: "prototypes1",
+        title: "Prototype #1",
+      },
+       {
+        id: "prototypes2",
+        title: "Prototype #2",
+      },
+      {
+        id: "testing",
+        title: "A/B Testing",
+      },
+      {
+        id: "impact",
+        title: "Impact",
+      },
+      {
+        id: "growth",
+        title: "Reflection and Growth",
+      },
+    ],
+  },
+  {
+    id: "project4",
     slug: "istart",
     title: "iSTART Early",
     subtitle:
@@ -140,7 +203,7 @@ export const projects: ProjectContent[] = [
     color: "#7F47A6",
     featured: true, // Keep featured
     image:
-      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/istart/ZenBook%20Duo%2014.png", // Add image
+      "https://4kpakrtcc8hsoxno.public.blob.vercel-storage.com/istart/updated%20cover%20image.png", // Add image
     tags: ["UX Design", "Gamification", "Education Technology", "NLP", "AI Integration"],
         sections: [
       {
@@ -182,7 +245,7 @@ export const projects: ProjectContent[] = [
     ],
   },
   {
-    id: "project4",
+    id: "project5",
     slug: "meta-portfolio",
     title: "this Portfolio AI",
     subtitle:
@@ -229,7 +292,7 @@ export const projects: ProjectContent[] = [
     ],
   },
   {
-    id: "project5",
+    id: "project6",
     slug: "legacy",
     title: "Legacy and TBAs",
     subtitle:
@@ -270,6 +333,9 @@ export const getActiveCaseStudyLiteral = (slug: string): string => {
       break;
     case "legacy":
       literal = "Legacy and TBAs";
+      break;
+    case "allie-skaimart":
+      literal = "Allie from Skaimart";
       break;
   }
   return literal;
