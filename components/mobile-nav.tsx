@@ -1,6 +1,6 @@
 "use client"
 
-import { Menu, MessageSquare } from "lucide-react"
+import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -8,11 +8,6 @@ export default function MobileNav() {
   // Toggle sidebar
   const toggleSidebar = () => {
     window.dispatchEvent(new CustomEvent("toggle-sidebar"))
-  }
-
-  // Toggle chatbot
-  const toggleChatbot = () => {
-    window.dispatchEvent(new CustomEvent("toggle-chatbot"))
   }
 
   return (
@@ -25,11 +20,8 @@ export default function MobileNav() {
 
         {/* Theme toggle */}
         <ThemeToggle />
-
-        <Button onClick={toggleChatbot} variant="ghost" size="icon" className="h-10 w-10">
-          <MessageSquare className="h-6 w-6" />
-          <span className="sr-only">Chat</span>
-        </Button>
+        
+        {/* Removed the chatbot toggle button */}
       </div>
     </div>
   )

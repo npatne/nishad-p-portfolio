@@ -3,30 +3,21 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, FolderKanban, FileText, User, AlertCircle, Mail, ChevronDown, Menu, X, ChevronLeft } from "lucide-react"
+import { Home, FolderKanban, FileText, User, Mail, ChevronDown, X, ChevronLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { projects } from "@/data/projects" // Import projects from central data
-
-// Remove the hardcoded projects array
-// const projects = [ ... ];
+import { projects } from "@/data/projects"
 
 export default function Sidebar() {
   const pathname = usePathname()
-  // Initialize to false and don't change based on pathname in initial state
   const [isOpen, setIsOpen] = useState(false)
-  
-  // Use a ref to track if this is the first render
   const isFirstRender = useRef<boolean>(true)
-
   
   useEffect(() => {
-    // Only run this effect after the first render to avoid hydration mismatch
     if (isFirstRender.current) {
       isFirstRender.current = false
-      // Only open the sidebar if we're not on the homepage
       if (pathname !== "/") {
         setIsOpen(true)
       }
@@ -34,11 +25,8 @@ export default function Sidebar() {
   }, [pathname])
   
   const [isCollapsed, setIsCollapsed] = useState(false)
-  // Initialize projectsOpen to true so the project list is always shown by default
-  const [projectsOpen, setProjectsOpen] = useState(true) 
-  // Initialize openProjectSlugs based on whether the initial path is the homepage
+  const [projectsOpen, setProjectsOpen] = useState(true)
   const [openProjectSlugs, setOpenProjectSlugs] = useState<string[]>(
-    // Use the imported projects data here
     pathname === "/" ? [] : projects.map((project) => project.slug)
   )
   const [activeSection, setActiveSection] = useState<string | null>(null)
@@ -72,17 +60,28 @@ export default function Sidebar() {
     }
   }, [])
 
+  // Update document with sidebar collapsed state
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      '--sidebar-width', 
+      isCollapsed ? '5rem' : '16rem'
+    );
+    
+    // Dispatch an event that the layout can listen to
+    const event = new CustomEvent('sidebar-collapse-change', { 
+      detail: { isCollapsed } 
+    });
+    window.dispatchEvent(event);
+  }, [isCollapsed]);
+
   // Auto-open projects submenu if on a project page
   useEffect(() => {
-    // Always set projects submenu to open by default
     setProjectsOpen(true);
 
     if (pathname.startsWith("/projects/")) {
-      // Extract the project slug from the pathname
       const projectSlug = pathname.split("/")[2]
 
       if (projectSlug) {
-        // Check if the project exists in the imported data
         const projectExists = projects.some(p => p.slug === projectSlug);
         if (projectExists) {
           setOpenProjectSlugs((prev) => (prev.includes(projectSlug) ? prev : [...prev, projectSlug]))
@@ -90,17 +89,14 @@ export default function Sidebar() {
         }
       }
     }
-  // Add projects to dependency array if its content could change, though likely static
   }, [pathname])
 
-  // Toggle project sections visibility - modified to close other sections
+  // Toggle project sections visibility
   const toggleProjectSections = (slug: string) => {
     setOpenProjectSlugs((prev) => {
-      // If this slug is already open, close it
       if (prev.includes(slug)) {
         return prev.filter((s) => s !== slug)
       }
-      // If opening a new slug, close all others and only open this one
       return [slug]
     })
   }
@@ -117,31 +113,23 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile menu button */}
-      <div className="fixed top-4 left-4 z-50 md:hidden">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          className="text-foreground"
-        >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
-      </div>
-
+      {/* Removed the mobile menu button */}
+      
       {/* Sidebar */}
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 bg-background border-r border-border transition-all duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
           isCollapsed ? "w-20" : "w-64",
-          "md:relative md:translate-x-0 md:w-auto",
-          isCollapsed ? "md:w-20" : "md:w-2/16",
+          "md:fixed md:translate-x-0",
+          isCollapsed ? "md:w-20" : "md:w-64",
         )}
-        style={{ height: "100vh", position: "sticky" }}
+        style={{ 
+          // Add this to ensure the main content can reference it
+          '--sidebar-width': isCollapsed ? '5rem' : '16rem' 
+        } as React.CSSProperties}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-[100vh]">
           {/* Top section - Logo/Branding */}
           <div className="p-4 border-b border-border flex justify-between items-center gap-2">
             {!isCollapsed && (
@@ -161,7 +149,7 @@ export default function Sidebar() {
               className="hidden md:flex text-foreground p-2 h-8 w-8"
               aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
-              <ChevronLeft className={cn("h-16 w-16 transition-transform", isCollapsed && "rotate-180")} />
+              <ChevronLeft className={cn("h-4 w-4 transition-transform", isCollapsed && "rotate-180")} />
             </Button>
           </div>
 

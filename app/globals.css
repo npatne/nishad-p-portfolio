@@ -355,3 +355,13 @@
 .bg-orange {
   @apply text-white;
 }
+
+/* Add this to your globals.css file */
+:root {
+  --sidebar-width: 16rem;
+}
+
+/* Then in your layout, update the main element's margin */
+main {
+  margin-left: var(--sidebar-width);
+}

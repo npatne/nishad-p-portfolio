@@ -50,6 +50,8 @@ export const ProjectSection = ({
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [loadedMedia, setLoadedMedia] = useState<Set<string>>(new Set())
 
   // Prefer explicit media prop if provided; else build from images + videos
   const media: MediaData[] =
@@ -71,16 +73,41 @@ export const ProjectSection = ({
     </div>
   )
 
+  const handleMediaLoad = (src: string) => {
+    setLoadedMedia(prev => new Set([...prev, src]))
+    if (src === getCurrentMediaSrc()) {
+      setIsLoading(false)
+    }
+  }
+
+  const getCurrentMediaSrc = () => {
+    if (!isCarousel && image) return image
+    if (isCarousel && media[currentCarouselIndex]) return media[currentCarouselIndex].src
+    return ""
+  }
+
+  const renderPlaceholder = () => (
+    <div className="w-full h-full min-h-[200px] flex items-center justify-center animate-pulse">
+      <img
+        src="/placeholder.svg"
+        alt="Loading..."
+        className="w-full h-full object-cover rounded-lg"
+      />
+    </div>
+  )
+
   const renderSingleImage = () => {
     if (!image) return null
     return (
       <div className="relative">
         <div className="cursor-pointer transition-transform hover:scale-[1.02] duration-300">
+          {isLoading && renderPlaceholder()}
           <img
             src={image}
             alt={imageAlt || `${projectTitle} - ${title}`}
-            className="w-full rounded-lg shadow-md object-cover"
+            className={`w-full rounded-lg shadow-md object-cover ${isLoading ? 'hidden' : ''}`}
             onClick={() => setLightboxOpen(true)}
+            onLoad={() => handleMediaLoad(image)}
           />
         </div>
         {singleImageCaption && (
@@ -95,6 +122,7 @@ export const ProjectSection = ({
   const renderCarouselPreview = () => {
     if (!isCarousel) return null
     const currentMedia = media[currentCarouselIndex]
+    const isCurrentLoading = !loadedMedia.has(currentMedia.src)
 
     const openLightboxAt = (idx: number) => {
       setCurrentIndex(idx)
@@ -104,26 +132,28 @@ export const ProjectSection = ({
     return (
       <div className="relative">
         <div className="cursor-pointer transition-transform hover:scale-[1.02] duration-300 flex items-center justify-center">
+          {isCurrentLoading && renderPlaceholder()}
           {currentMedia.type === "image" ? (
             <img
               src={currentMedia.src}
               alt={currentMedia.alt || `${projectTitle} - ${title}`}
-              className="w-full rounded-lg shadow-md object-cover"
+              className={`w-full rounded-lg shadow-md object-cover ${isCurrentLoading ? 'hidden' : ''}`}
               onClick={() => openLightboxAt(currentCarouselIndex)}
+              onLoad={() => handleMediaLoad(currentMedia.src)}
             />
           ) : (
             <video
               src={currentMedia.src}
               poster={"poster" in currentMedia ? currentMedia.poster : undefined}
-              className="w-[60%] rounded-lg shadow-md object-cover"
+              className={`w-[60%] rounded-lg shadow-md object-cover ${isCurrentLoading ? 'hidden' : ''}`}
               onClick={() => openLightboxAt(currentCarouselIndex)}
-              // Preview reliability: show controls so autoplay failures aren't blank
               controls
               muted
               playsInline
               preload="metadata"
               autoPlay
               loop
+              onLoadedData={() => handleMediaLoad(currentMedia.src)}
             />
           )}
         </div>
@@ -171,6 +201,103 @@ export const ProjectSection = ({
       </div>
     )
   }
+
+  // Update lightbox rendering to include loading state
+  const renderLightboxContent = () => {
+    if (!hasMedia) return null
+    
+    const currentSrc = isCarousel ? media[currentIndex].src : image
+    const isCurrentLoading = !loadedMedia.has(currentSrc!)
+
+    return (
+      <div className="max-w-screen-xl max-h-screen overflow-auto relative" onClick={(e) => e.stopPropagation()}>
+        {isCurrentLoading && (
+          <div className="max-w-full max-h-[90vh] mx-auto">
+            {renderPlaceholder()}
+          </div>
+        )}
+        
+        {!isCarousel && image && (
+          <div className="relative">
+            <img
+              src={image}
+              alt={imageAlt || `${projectTitle} - ${title}`}
+              className={`max-w-full max-h-[90vh] mx-auto object-contain ${isCurrentLoading ? 'hidden' : ''}`}
+              onLoad={() => handleMediaLoad(image)}
+            />
+            {singleImageCaption && (
+              <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-3 rounded-lg text-center">
+                {singleImageCaption}
+              </div>
+            )}
+          </div>
+        )}
+
+        {isCarousel && (
+          <>
+            <div className="relative">
+              {media[currentIndex].type === "image" ? (
+                <img
+                  src={media[currentIndex].src}
+                  alt={media[currentIndex].alt || `${projectTitle} - ${title}`}
+                  className={`max-w-full max-h-[90vh] mx-auto object-contain ${isCurrentLoading ? 'hidden' : ''}`}
+                  onLoad={() => handleMediaLoad(media[currentIndex].src)}
+                />
+              ) : (
+                <video
+                  src={media[currentIndex].src}
+                  poster={"poster" in media[currentIndex] ? (media[currentIndex] as VideoData).poster : undefined}
+                  className={`max-w-full max-h-[90vh] mx-auto object-contain ${isCurrentLoading ? 'hidden' : ''}`}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  onLoadedData={() => handleMediaLoad(media[currentIndex].src)}
+                />
+              )}
+
+              {media.length > 1 && (
+                <>
+                  <button
+                    onClick={goToPrevious}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={goToNext}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+
+              {media.length > 1 && (
+                <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                  {currentIndex + 1} / {media.length}
+                </div>
+              )}
+            </div>
+            
+            {media[currentIndex].caption && (
+              <div className="mt-4 text-sm prose prose-gray italic text-center border border-gray-700 p-2 rounded-lg bg-gray-100">
+                {media[currentIndex].caption}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    )
+  }
+
+  // Effect to handle loading state changes when media changes
+  useEffect(() => {
+    const currentSrc = getCurrentMediaSrc()
+    setIsLoading(!loadedMedia.has(currentSrc))
+  }, [currentCarouselIndex, image, media])
 
   const renderMedia = () => {
     if (!hasMedia) return null
@@ -248,79 +375,7 @@ export const ProjectSection = ({
             <X className="w-8 h-8" />
           </button>
 
-          <div className="max-w-screen-xl max-h-screen overflow-auto relative" onClick={(e) => e.stopPropagation()}>
-            {!isCarousel && image && (
-              <div className="relative">
-                <img
-                  src={image}
-                  alt={imageAlt || `${projectTitle} - ${title}`}
-                  className="max-w-full max-h-[90vh] mx-auto object-contain"
-                />
-                {singleImageCaption && (
-                  <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-3 rounded-lg text-center">
-                    {singleImageCaption}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {isCarousel && (
-              <>
-                <div className="relative">
-                  {media[currentIndex].type === "image" ? (
-                    <img
-                      src={media[currentIndex].src}
-                      alt={media[currentIndex].alt || `${projectTitle} - ${title}`}
-                      className="max-w-full max-h-[90vh] mx-auto object-contain"
-                    />
-                  ) : (
-                    <video
-                      src={media[currentIndex].src}
-                      poster={"poster" in media[currentIndex] ? (media[currentIndex] as VideoData).poster : undefined}
-                      className="max-w-full max-h-[90vh] mx-auto object-contain"
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="auto"
-                    />
-                  )}
-
-                  {media.length > 1 && (
-                    <>
-                      <button
-                        onClick={goToPrevious}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors"
-                      >
-                        <ChevronLeft className="w-6 h-6" />
-                      </button>
-                      <button
-                        onClick={goToNext}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors"
-                      >
-                        <ChevronRight className="w-6 h-6" />
-                      </button>
-                    </>
-                  )}
-
-                  {media.length > 1 && (
-                    <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
-                      {currentIndex + 1} / {media.length}
-                    </div>
-                  )}
-                </div>
-                
-                {media[currentIndex].caption && (
-                  <div className="mt-4 text-sm prose prose-gray italic text-center border border-gray-700 p-2 rounded-lg bg-gray-100">
-                    {media[currentIndex].caption}
-                  </div>
-                )}
-              </>
-            )}
-
-
-          </div>
+          {renderLightboxContent()}
         </div>
       )}
     </div>

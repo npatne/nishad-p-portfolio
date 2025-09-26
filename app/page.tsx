@@ -51,22 +51,41 @@ export default function Home() {
 
     {/* Interactive Typed Text - Below Orb */}
     <div className="text-center -mt-4">
-      <TextType
-        text={[
-          "👋 Hey! This portfolio is interactive",
-          "It can chat about my projects & skills", 
-          "Try the chat box on the right →",
-          "Let's have a conversation!"
-        ]}
-        className="text-xl md:text-2xl font-bold leading-relaxed"
-        textColors={['hsl(var(--muted-foreground))']}
-        typingSpeed={30}
-        pauseDuration={4000}
-        showCursor={true}
-        cursorCharacter="_"
-        cursorClassName="text-primary"
-        loop={true}
-      />
+      <div className="hidden md:block">
+        <TextType
+          text={[
+            "👋 Hey! This portfolio is interactive",
+            "It can chat about my projects & skills", 
+            "Try the chat box on the right →",
+            "Let's have a conversation!"
+          ]}
+          className="text-xl md:text-2xl font-bold leading-relaxed"
+          textColors={['hsl(var(--muted-foreground))']}
+          typingSpeed={30}
+          pauseDuration={4000}
+          showCursor={true}
+          cursorCharacter="_"
+          cursorClassName="text-primary"
+          loop={true}
+        />
+      </div>
+      <div className="md:hidden">
+        <TextType
+          text={[
+            "👋 Hey! This portfolio is best experienced on desktop",
+            "Where you can use the chatbot to chat with my work",
+            "Feel free to browse on mobile too!"
+          ]}
+          className="text-xl font-bold leading-relaxed"
+          textColors={['hsl(var(--muted-foreground))']}
+          typingSpeed={30}
+          pauseDuration={4000}
+          showCursor={true}
+          cursorCharacter="_"
+          cursorClassName="text-primary"
+          loop={true}
+        />
+      </div>
     </div>
 
     {/* Subtle scroll CTA - Bottom */}
