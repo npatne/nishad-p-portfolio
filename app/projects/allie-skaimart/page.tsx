@@ -164,7 +164,7 @@ export default function AllieSkaimartPage() {
                   onClick={() => handleAskAI(section.id)}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 block [@media(max-width:480px)]:hidden"
                 >
                   <Sparkles className="h-4 w-4" />
                   <span>Ask AI about - {section.title}</span>
