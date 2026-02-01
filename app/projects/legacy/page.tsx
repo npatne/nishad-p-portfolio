@@ -4,6 +4,12 @@ import { useEffect, useState, useRef } from "react";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { PasswordProtection } from "@/components/password-protection";
 import { projects } from "@/data/projects";
 import {
@@ -158,15 +164,24 @@ export default function LegacyPage() {
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">{section.title}</h2>
-                <Button
-                  onClick={() => handleAskAI(section.id)}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 block [@media(max-width:480px)]:hidden"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  <span>Ask AI about - {section.title}</span>
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={() => handleAskAI(section.id)}
+                        variant="outline"
+                        size="icon"
+                        className="hidden md:flex h-9 w-9"
+                      >
+                        <Sparkles className="h-4 w-4" />
+                        <span className="sr-only">Ask AI about {section.title}</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Ask AI about {section.title}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
 
               {/* Using the enhanced ProjectSection component */}
