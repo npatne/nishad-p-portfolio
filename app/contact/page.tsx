@@ -11,7 +11,7 @@ export default function ContactPage() {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedLinkedIn, setCopiedLinkedIn] = useState(false);
 
-  const emailAddress = "nishadpux@gmail.com"; // Replace with your actual email
+  const emailAddress = "1.nishadpatne@gmail.com"; // Replace with your actual email
   const linkedInUrl = "https://www.linkedin.com/in/nishad-patne/"; // Replace with your actual LinkedIn URL
   const linkedInDisplay = "Connect on LinkedIn"; // Text for the LinkedIn link
 

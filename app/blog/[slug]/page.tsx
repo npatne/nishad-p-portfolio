@@ -98,10 +98,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           </a>{" "}
           or emails at{" "}
           <Link
-            href="mailto:nishadpux@gmail.com"
+            href="mailto:1.nishadpatne@gmail.com"
             className="text-primary hover:underline"
           >
-            nishadpux@gmail.com
+            1.nishadpatne@gmail.com
           </Link>
         </p>
         <p className="flex items-center justify-center text-2xl">
