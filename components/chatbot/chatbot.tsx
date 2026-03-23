@@ -35,7 +35,11 @@ type ChatbotState = {
     general: Message[]
     specific: Message[]
   }
-  sessionId: string | null // Initialize as null
+  // Per-mode session IDs: each mode gets its own session on the backend
+  sessionId: {
+    general: string | null
+    specific: string | null
+  }
   mode: ChatMode
   activeCaseStudy?: string
 }
@@ -206,7 +210,7 @@ export default function Chatbot() {
     isOpen: false,
     isCollapsed: false,
     messages: { general: [], specific: [] },
-    sessionId: null,
+    sessionId: { general: null, specific: null },
     mode: "general",
   })
   
@@ -235,6 +239,10 @@ export default function Chatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const prevPathRef = useRef<string>(pathname)
+  // Real-time lock: prevents concurrent API calls regardless of React render cycle.
+  // Unlike isLoading (state), this ref updates synchronously so rapid Enter presses
+  // or double-clicks can't sneak a second request through before re-render.
+  const isProcessingRef = useRef(false)
 
   // Initialize chatbot state based on path, but don't create session yet
   useEffect(() => {
@@ -246,7 +254,7 @@ export default function Chatbot() {
       ...prev,
       mode: initialMode,
       activeCaseStudy,
-      sessionId: null, // Ensure session is null on initial load
+      sessionId: { general: null, specific: null }, // Ensure both sessions are null on initial load
       messages: { general: [], specific: [] } // Ensure messages are cleared
     }))
 
@@ -264,13 +272,16 @@ export default function Chatbot() {
         const newMode = isDetail ? "specific" : "general"
         const activeCaseStudy = getActiveCaseStudyFromPath(pathname)
 
-        // Update state: change mode, case study, clear messages, RESET sessionId to null
+        // Also release the processing lock so the new page can send messages
+        isProcessingRef.current = false
+
+        // Update state: change mode, case study, clear messages, RESET both session IDs
         setState(prev => ({
           ...prev,
           messages: { general: [], specific: [] }, // Clear messages for both modes
           mode: newMode,
           activeCaseStudy,
-          sessionId: null // Reset session ID on path change
+          sessionId: { general: null, specific: null } // Reset both session IDs on path change
         }))
 
         prevPathRef.current = pathname
@@ -413,10 +424,13 @@ export default function Chatbot() {
     return questions || ["Ask me anything about Nishad's portfolio."];
   };
 
-  // Add message to state helper
+  // Add message to state helper.
+  // targetMode is passed explicitly to avoid stale closure bugs: if the user
+  // switches modes while a request is in-flight, prev.mode would be wrong.
   const addMessageToState = (
     role: "user" | "assistant",
     content: string,
+    targetMode: ChatMode,
     responseTime?: number
   ) => {
     const newMessage: Message = {
@@ -428,30 +442,35 @@ export default function Chatbot() {
     };
 
     setState((prev) => {
-      const currentModeMessages = prev.messages[prev.mode] || [];
+      const targetModeMessages = prev.messages[targetMode] || [];
       return {
         ...prev,
         messages: {
           ...prev.messages,
-          [prev.mode]: [...currentModeMessages, newMessage],
+          [targetMode]: [...targetModeMessages, newMessage],
         },
       };
     });
   };
 
-  // Internal function to handle the actual sending logic after session is confirmed
+  // Internal function to handle the actual sending logic after session is confirmed.
+  // targetMode is passed explicitly so messages always land in the correct bucket
+  // even if the user switches tabs while the request is in-flight.
   const handleSendMessageInternal = async (
     content: string,
-    sessionId: string // Expects a valid session ID
+    sessionId: string,
+    targetMode: ChatMode
   ) => {
-    if (!content.trim() || isLoading) return; // Prevent sending empty/during loading
+    // Note: concurrent-call guard is handled by isProcessingRef in handleStarterQuestionClick.
+    // Do NOT check `isLoading` here — it is a stale closure value and will be false
+    // even when a request is already in flight (the React re-render hasn't happened yet).
+    if (!content.trim()) return;
 
-    const currentMode = state.mode;
     const currentCaseStudy = state.activeCaseStudy;
     const currentSectionContext = promptContext; // Capture context before clearing
 
-    // Add user message optimistically
-    addMessageToState("user", content);
+    // Add user message to the correct mode's history
+    addMessageToState("user", content, targetMode);
 
     setInput(""); // Clear input field
     setIsLoading(true); // Set loading state for API call
@@ -460,25 +479,28 @@ export default function Chatbot() {
     try {
       const response = await callChatApi(
         content,
-        sessionId, // Use the confirmed session ID
-        currentMode,
+        sessionId,
+        targetMode,
         currentCaseStudy,
         currentSectionContext
       );
 
-      // Add assistant message
+      // Add assistant message to the correct mode's history
       addMessageToState(
         "assistant",
         response.answer,
-        parseFloat(response.responseTime) // Ensure responseTime is a number
+        targetMode,
+        parseFloat(response.responseTime)
       );
     } catch (error) {
       console.error("Error sending message:", error);
       addMessageToState(
         "assistant",
-        "Sorry, I encountered an error processing your request. Please try again later."
+        "Sorry, I encountered an error processing your request. Please try again later.",
+        targetMode
       );
     } finally {
+      isProcessingRef.current = false; // Release the lock so new messages can be sent
       setIsLoading(false); // Clear loading state
       setIsInitializing(false); // Ensure initializing state is also cleared
     }
@@ -488,41 +510,63 @@ export default function Chatbot() {
   const handleStarterQuestionClick = (question: string) => {
     if (!question.trim()) return;
 
-    if (!state.sessionId) {
+    // LOCK: check synchronously before any async work.
+    // This prevents a second call sneaking through before React re-renders
+    // (e.g. rapid Enter presses, double-clicks, or stale event-listener closures).
+    if (isProcessingRef.current) return;
+    isProcessingRef.current = true;
+
+    // Capture mode synchronously — this is the mode the message belongs to.
+    // Passing it explicitly through the chain ensures messages always land in the
+    // correct bucket even if the user switches tabs mid-flight.
+    const targetMode = state.mode;
+    const currentSessionId = state.sessionId[targetMode]; // per-mode session lookup
+
+    if (!currentSessionId) {
       setIsInitializing(true); // Show initializing state for session request
       setIsLoading(true); // Also set loading as we'll proceed to send message
-      console.log("No session ID found, requesting new one...");
-      requestNewSession(state.mode, state.activeCaseStudy)
+      console.log(`No session ID found for mode "${targetMode}", requesting new one...`);
+      requestNewSession(targetMode, state.activeCaseStudy)
         .then((newSessionId) => {
           if (newSessionId) {
-            console.log("Obtained new session ID:", newSessionId);
-            setState((prev) => ({ ...prev, sessionId: newSessionId }));
-            // Now send the message with the new session ID
-            handleSendMessageInternal(question, newSessionId); // Pass the new ID
+            console.log(`Obtained new session ID for mode "${targetMode}":`, newSessionId);
+            // Store the new session ID under the correct mode key
+            setState((prev) => ({
+              ...prev,
+              sessionId: { ...prev.sessionId, [targetMode]: newSessionId }
+            }));
+            // handleSendMessageInternal releases isProcessingRef in its finally block.
+            handleSendMessageInternal(question, newSessionId, targetMode);
           } else {
-            // Handle session creation failure
-            console.error("Failed to get session ID, cannot send message.");
+            // Handle session creation failure — must release lock here
+            console.error(`Failed to get session ID for mode "${targetMode}", cannot send message.`);
+            isProcessingRef.current = false;
             addMessageToState(
               "assistant",
-              "Sorry, I couldn't start a session. Please try again."
+              "Sorry, I couldn't start a session. Please try again.",
+              targetMode
             );
-            setIsInitializing(false); // Clear initializing state on failure
-            setIsLoading(false); // Clear loading state on failure
+            setIsInitializing(false);
+            setIsLoading(false);
           }
         })
         .catch((error) => {
+          // Must release lock on error too
           console.error("Error during session request:", error);
+          isProcessingRef.current = false;
           addMessageToState(
             "assistant",
-            "Sorry, an error occurred while starting a session."
+            "Sorry, an error occurred while starting a session.",
+            targetMode
           );
-          setIsInitializing(false); // Clear initializing state on error
-          setIsLoading(false); // Clear loading state on error
+          setIsInitializing(false);
+          setIsLoading(false);
         });
     } else {
-      // Session already exists, send message directly
-      console.log("Session ID exists:", state.sessionId, "Sending message.");
-      handleSendMessageInternal(question, state.sessionId); // Pass existing ID
+      // Session already exists for this mode — send message directly.
+      // handleSendMessageInternal releases isProcessingRef in its finally block.
+      console.log(`Session ID exists for mode "${targetMode}":`, currentSessionId, "Sending message.");
+      handleSendMessageInternal(question, currentSessionId, targetMode);
     }
   };
 
